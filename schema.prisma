@@ -1,0 +1,46 @@
+datasource db {
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
+}
+
+generator db{
+	provider = "go run github.com/steebchen/prisma-client-go"
+}
+
+enum GalleryVisibility {
+	PRIVATE
+	PUBLIC
+}
+
+model User {
+	id            String         @id @default(cuid())
+	name          String
+	avatarUrl     String?
+	authUid       String         @unique
+	createdAt     DateTime       @default(now())
+	updatedAt     DateTime       @updatedAt
+	galleries     Gallery[]
+	images        Image[]
+}
+
+model Gallery {
+	id            String         @id @default(cuid())
+	name          String
+	createdAt     DateTime       @default(now())
+	updatedAt     DateTime       @updatedAt
+	visibility    GalleryVisibility
+	userId        String
+	user          User           @relation(fields: [userId], references: [id])
+	images        Image[]
+}
+
+model Image {
+	id            String         @id @default(cuid())
+	storageKey    String         @unique
+	createdAt     DateTime       @default(now())
+	updatedAt     DateTime       @updatedAt
+	userId        String
+	user          User           @relation(fields: [userId], references: [id])
+	galleryId     String
+	gallery       Gallery        @relation(fields: [galleryId], references: [id])
+}
