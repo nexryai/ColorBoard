@@ -12,16 +12,6 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
-
-	var wasmInitialized: boolean
-	var terminals: Terminal[]
-	function updateElement(id: string, text: string): void
-
-	function onTerminalInput(index: number, event: string): void
-	function registerTerminal(index: number, sessionId: string, sshHostId: string): void
-
-	function startSSH(index: number): void
-
 }
 
 export {}
