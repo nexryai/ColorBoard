@@ -37,6 +37,7 @@ model Gallery {
 model Image {
 	id            String         @id @default(cuid())
 	storageKey    String         @unique
+	thumbnailKey  String         @unique
 	createdAt     DateTime       @default(now())
 	updatedAt     DateTime       @updatedAt
 	userId        String
