@@ -30,8 +30,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@battlefieldduck/xterm-svelte": "^1.0.0",
-		"@fontsource/jetbrains-mono": "^5.0.20",
 		"@tabler/icons-svelte": "^3.10.0",
 		"bits-ui": "^0.21.12",
 		"clsx": "^2.1.1",

@@ -4,7 +4,6 @@
     import UserScan from "@tabler/icons-svelte/icons/user-scan"
     import Key from "@tabler/icons-svelte/icons/key"
     import { isLoggedIn } from "$lib/account"
-    import Terminal from "$lib/components/core/terminal.svelte"
 </script>
 
 <section>
@@ -41,7 +40,7 @@
             </div>
         </div>
     {:else}
-        <Terminal />
+        <p>ToDo: Logged in</p>
     {/if}
 
 </section>
