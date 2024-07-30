@@ -18,7 +18,7 @@ type (
 	}
 	IStorageService interface {
 		CreateFile(reader io.Reader) (string, error)
-		GetFilePrivateUrl(param db.ImageEqualsUniqueWhereParam) (string, error)
+		GetFileUrl(param db.ImageEqualsUniqueWhereParam) (string, error)
 		DeleteFile(param db.ImageEqualsUniqueWhereParam) error
 	}
 )
