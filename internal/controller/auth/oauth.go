@@ -20,7 +20,7 @@ func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
 func ConfigOAuthRouter(router *gin.Engine) {
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://127.0.0.1:8080/auth/google/callback"),
-		azuread.New(os.Getenv("AZUREAD_KEY"), os.Getenv("AZUREAD_SECRET"), "http://127.0.0.1:8080/auth/azuread/callback", nil),
+		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), "http://127.0.0.1:8080/auth/azuread/callback", nil),
 	)
 
 	router.GET("/auth/:provider", func(c *gin.Context) {
