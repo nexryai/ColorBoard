@@ -88,7 +88,7 @@
 	<div class="corner">
 		<a href="/">
 			<img src={logo} alt="SvelteKit" />
-            <span class="logo-text">Hummingbird</span>
+            <span class="logo-text">ColorBoard</span>
             <span class="logo-text logo-beta">beta</span>
 		</a>
 	</div>
