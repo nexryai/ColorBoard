@@ -4,6 +4,7 @@
     import UserScan from "@tabler/icons-svelte/icons/user-scan"
     import Key from "@tabler/icons-svelte/icons/key"
     import { isLoggedIn } from "$lib/account"
+    import AddGalleryFloatingButton from "$lib/components/AddGalleryFloatingButton.svelte";
 </script>
 
 <section>
@@ -41,6 +42,9 @@
         </div>
     {:else}
         <p>ToDo: Logged in</p>
+        <div class="floating-button">
+            <AddGalleryFloatingButton />
+        </div>
     {/if}
 
 </section>
@@ -128,5 +132,11 @@
                 }
             }
         }
+    }
+
+    .floating-button {
+        position: fixed;
+        right: 8vw;
+        bottom: 8vh;
     }
 </style>
