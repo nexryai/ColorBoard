@@ -76,8 +76,8 @@ func ServeClient(router *gin.Engine) {
 	})
 
 	// Serve the index.html
-	router.GET("/", func(ctx *gin.Context) {
-		rawFile, err := clientDistFS.Open(clientDistPrefix + "/index.html")
+	router.NoRoute(func(ctx *gin.Context) {
+		rawFile, err := clientDistFS.Open(clientDistPrefix + "/200.html")
 		if err != nil {
 			ctx.Status(http.StatusNotFound)
 			return
