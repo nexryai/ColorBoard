@@ -23,20 +23,20 @@ func ConfigOAuthRouter(router *gin.Engine) {
 		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), "http://127.0.0.1:8080/auth/azuread/callback", nil),
 	)
 
-	router.GET("/auth/:provider", func(c *gin.Context) {
-		provider := c.Param("provider")
-		c.Request = contextWithProviderName(c, provider)
+	router.GET("/auth/:provider", func(ctx *gin.Context) {
+		provider := ctx.Param("provider")
+		ctx.Request = contextWithProviderName(ctx, provider)
 
-		gothic.BeginAuthHandler(c.Writer, c.Request)
+		gothic.BeginAuthHandler(ctx.Writer, ctx.Request)
 	})
 
-	router.GET("/auth/:provider/callback", func(c *gin.Context) {
-		provider := c.Param("provider")
-		c.Request = contextWithProviderName(c, provider)
+	router.GET("/auth/:provider/callback", func(ctx *gin.Context) {
+		provider := ctx.Param("provider")
+		ctx.Request = contextWithProviderName(ctx, provider)
 
-		user, err := gothic.CompleteUserAuth(c.Writer, c.Request)
+		user, err := gothic.CompleteUserAuth(ctx.Writer, ctx.Request)
 		if err != nil {
-			fmt.Fprintln(c.Writer, err)
+			fmt.Fprintln(ctx.Writer, err)
 			return
 		}
 
