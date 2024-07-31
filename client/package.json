@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "cd wasm && wasm-pack build --target web && cd .. && mv ./wasm/pkg ./static/wasm && vite build",
+		"build": "cd wasm && wasm-pack build --target web && cd .. && rm -rf ./static/wasm && mv ./wasm/pkg ./static/wasm && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
