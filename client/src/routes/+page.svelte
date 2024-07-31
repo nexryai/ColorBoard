@@ -1,8 +1,7 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button"
-    import { Input } from "$lib/components/ui/input/index.js"
-    import UserScan from "@tabler/icons-svelte/icons/user-scan"
-    import Key from "@tabler/icons-svelte/icons/key"
+    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
+    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
     import { isLoggedIn } from "$lib/account"
     import AddGalleryFloatingButton from "$lib/components/AddGalleryFloatingButton.svelte";
 </script>
@@ -16,26 +15,19 @@
                     <div class="form-large-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1 5C1 4.44772 1.44772 4 2 4H22C22.5523 4 23 4.44772 23 5V19C23 19.5523 22.5523 20 22 20H2C1.44772 20 1 19.5523 1 19V5ZM13 8V10H19V8H13ZM18 12H13V14H18V12ZM10.5 10C10.5 8.61929 9.38071 7.5 8 7.5C6.61929 7.5 5.5 8.61929 5.5 10C5.5 11.3807 6.61929 12.5 8 12.5C9.38071 12.5 10.5 11.3807 10.5 10ZM8 13.5C6.067 13.5 4.5 15.067 4.5 17H11.5C11.5 15.067 9.933 13.5 8 13.5Z"></path></svg>
                     </div>
-                    <div class="form">
-                        <div class="input-elm">
-                            <div class="form-input-icon">
-                                <UserScan />
-                            </div>
-                            <Input style="margin: 8px" type="text" placeholder="Username" />
+                    <div class="login-links">
+                        <div class="login-button">
+                            <Button class="w-[280px]">
+                                <BrandGoogle />
+                                　Login with Google
+                            </Button>
                         </div>
                         <div class="input-elm">
-                            <div class="form-input-icon">
-                                <Key />
-                            </div>
-                            <Input style="margin: 8px" type="password" placeholder="Password" />
+                            <Button class="w-[280px]">
+                                <BrandAzure />
+                                　Login with Microsoft Entra ID
+                            </Button>
                         </div>
-
-                    </div>
-                    <div class="actions">
-                        <Button>
-                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-login"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M21 12h-13l3 -3" /><path d="M11 15l-3 -3" /></svg>
-                            　Login and continue
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -109,26 +101,14 @@
                     }
                 }
 
-                .form {
+                .login-links {
                     width: 370px;
                     margin: auto;
+                    text-align: center;
 
-                    .form-input-icon {
+                    .login-button {
                         margin: 8px;
-                        padding-top: 8px;
                     }
-
-                    .input-elm {
-                        margin: 8px;
-                        display: flex;
-                    }
-                }
-
-                .actions {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                    margin: 22px;
                 }
             }
         }
