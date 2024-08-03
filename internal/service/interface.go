@@ -6,19 +6,17 @@ import (
 )
 
 type (
-	IUserService    interface{}
-	IAuthService    interface{}
-	IIdentService   interface{}
-	IGalleryService interface {
-		CreateGallery(gallery db.GalleryModel) (string, error)
-		AddImage(reader io.Reader, gallery db.GalleryModel) (string, error)
+	IUserService interface {
+		CreateUser(user *db.UserModel) (string, error)
+		GetUser(param *db.UserEqualsUniqueWhereParam) (*db.UserModel, error)
 	}
-	IThumbnailService interface {
-		GenerateThumbnail(reader io.Reader) (*[]byte, error)
+	IGalleryService interface {
+		CreateGallery(gallery *db.GalleryModel) (string, error)
+		AddImage(reader io.Reader, gallery *db.GalleryModel) (string, error)
 	}
 	IStorageService interface {
 		CreateFile(reader io.Reader) (string, error)
-		GetFileUrl(param db.ImageEqualsUniqueWhereParam) (string, error)
-		DeleteFile(param db.ImageEqualsUniqueWhereParam) error
+		GetFileUrl(param *db.ImageEqualsUniqueWhereParam) (string, error)
+		DeleteFile(param *db.ImageEqualsUniqueWhereParam) error
 	}
 )
