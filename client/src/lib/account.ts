@@ -1,11 +1,11 @@
 import { browser } from "$app/environment"
 
-export function isLoggedIn() {
+export function isLoggedIn(): boolean {
     // isLoginのCookieがあればログインしていると判断
     if (!browser) {
         console.error("This function is only available in the browser")
         return false
     }
     console.log(document.cookie)
-    return document.cookie.includes("isLoggedIn=true")
+    return document.cookie.includes("auth_uid=google%") || document.cookie.includes("auth_uid=azuread%")
 }
