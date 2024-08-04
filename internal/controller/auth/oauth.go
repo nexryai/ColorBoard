@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/azuread"
@@ -20,8 +22,12 @@ var (
 	log = logger.GetLogger("OAuth")
 )
 
+func genSecret() []byte {
+	return securecookie.GenerateRandomKey(64)
+}
+
 func getCallbackURL(provider string) string {
-	return fmt.Sprintf("%s/auth/%s/callback", os.Getenv("APP_URL"), provider)
+	return fmt.Sprintf("%s/api/oauth/%s/callback", os.Getenv("APP_URL"), provider)
 }
 
 func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
@@ -39,6 +45,16 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
 		os.Exit(1)
 	}
 
+	// Improve cookie security
+	store := sessions.NewCookieStore(genSecret())
+	store.MaxAge(36000)
+	store.Options.Path = "/api"
+	store.Options.HttpOnly = true
+	store.Options.Secure = true
+	store.Options.SameSite = http.SameSiteStrictMode
+
+	gothic.Store = store
+
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), getCallbackURL("google")),
 		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), getCallbackURL("azuread"), nil),
@@ -51,7 +67,7 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
 		gothic.BeginAuthHandler(ctx.Writer, ctx.Request)
 	})
 
-	router.GET("/auth/:provider/callback", func(ctx *gin.Context) {
+	router.GET("/api/oauth/:provider/callback", func(ctx *gin.Context) {
 		provider := ctx.Param("provider")
 		ctx.Request = contextWithProviderName(ctx, provider)
 
