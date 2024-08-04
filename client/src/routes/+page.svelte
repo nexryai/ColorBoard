@@ -17,13 +17,13 @@
                     </div>
                     <div class="login-links">
                         <div class="login-button">
-                            <Button class="w-[280px]">
+                            <Button class="w-[280px]" on:click={() => location.href="/auth/google"}>
                                 <BrandGoogle />
                                 　Login with Google
                             </Button>
                         </div>
                         <div class="input-elm">
-                            <Button class="w-[280px]">
+                            <Button class="w-[280px]" on:click={() => location.href="/auth/azuread"}>
                                 <BrandAzure />
                                 　Login with Microsoft Entra ID
                             </Button>
