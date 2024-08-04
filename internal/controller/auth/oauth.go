@@ -17,8 +17,13 @@ import (
 )
 
 var (
-	log = logger.GetLogger("OAuth")
+	appUrl = os.Getenv("APP_URL")
+	log    = logger.GetLogger("OAuth")
 )
+
+func getCallbackURL(provider string) string {
+	return fmt.Sprintf("%s/auth/%s/callback", appUrl, provider)
+}
 
 func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
 	return ctx.Request.WithContext(context.WithValue(ctx.Request.Context(), "provider", provider))
@@ -26,8 +31,8 @@ func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
 
 func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
 	goth.UseProviders(
-		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://127.0.0.1:8080/auth/google/callback"),
-		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), "http://127.0.0.1:8080/auth/azuread/callback", nil),
+		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), getCallbackURL("google")),
+		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), getCallbackURL("azuread"), nil),
 	)
 
 	router.GET("/auth/:provider", func(ctx *gin.Context) {
