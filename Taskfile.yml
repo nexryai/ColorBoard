@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  debug:
+    cmds:
+      - cd ./client && yarn build
+      - go run main.go
+    silent: false
