@@ -14,11 +14,15 @@ func (us *UserServices) CreateUser(user *service.UserCreateParam) (string, error
 		return "", err
 	}
 
+	if user.AvatarUrl == "" {
+		user.AvatarUrl = "https://www.gravatar.com/avatar/"
+	}
+
 	created, err := prisma.User.CreateOne(
 		db.User.Name.Set(user.Name),
 		db.User.AuthUID.Set(user.AuthUID),
 		db.User.Galleries.Link(nil),
-		db.User.AvatarURL.Set("hoge"),
+		db.User.AvatarURL.Set(user.AvatarUrl),
 	).Exec(ctx)
 
 	if err != nil {
