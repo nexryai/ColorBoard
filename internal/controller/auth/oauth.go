@@ -51,7 +51,7 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
 	store.Options.Path = "/api"
 	store.Options.HttpOnly = true
 	store.Options.Secure = true
-	store.Options.SameSite = http.SameSiteStrictMode
+	store.Options.SameSite = http.SameSiteDefaultMode
 
 	gothic.Store = store
 
