@@ -6,14 +6,20 @@ import (
 	"github.com/gorilla/sessions"
 	apiController "github.com/nexryai/ColorBoard/internal/controller/api"
 	authController "github.com/nexryai/ColorBoard/internal/controller/auth"
+	"github.com/nexryai/ColorBoard/internal/logger"
 	"github.com/nexryai/ColorBoard/internal/middleware"
 	"github.com/nexryai/ColorBoard/internal/server"
 	"github.com/nexryai/ColorBoard/internal/service/account"
 	"net/http"
 )
 
+var (
+	log = logger.GetLogger("Boot")
+)
+
 func Boot() {
 	// Initialize session store
+	log.Info("Initializing session store...")
 	storeKey := securecookie.GenerateRandomKey(32)
 	storeEncryptionKey := securecookie.GenerateRandomKey(32)
 
@@ -24,13 +30,15 @@ func Boot() {
 	sessionStore.Options.Secure = true
 	sessionStore.Options.SameSite = http.SameSiteDefaultMode
 
+	// Resolve dependencies
+	log.Info("Initializing services and resolving dependencies...")
+	userService := account.NewUserServices()
+
 	// Boot the server
+	log.Info("Configuring routes...")
 	router := gin.Default()
 	router.Use(middleware.AuthMiddleware(sessionStore))
 	server.ServeClient(router)
-
-	// Resolve dependencies
-	userService := account.NewUserServices()
 
 	// Config the OAuth router
 	authController.ConfigOAuthRouter(router, userService, sessionStore)
@@ -38,5 +46,7 @@ func Boot() {
 	// Config API routers
 	apiController.ConfigAccountAPIRouter(router, userService)
 
+	// Start the server
+	log.Info("Starting server...")
 	router.Run(":8080")
 }
