@@ -23,7 +23,7 @@ var (
 )
 
 func genSecret() []byte {
-	return securecookie.GenerateRandomKey(64)
+	return securecookie.GenerateRandomKey(32)
 }
 
 func getCallbackURL(provider string) string {
@@ -34,7 +34,7 @@ func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
 	return ctx.Request.WithContext(context.WithValue(ctx.Request.Context(), "provider", provider))
 }
 
-func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
+func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, sessionStore *sessions.CookieStore) {
 	if os.Getenv("APP_URL") == "" {
 		log.Fatal("APP_URL is not set")
 		os.Exit(1)
@@ -45,15 +45,15 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
 		os.Exit(1)
 	}
 
-	// Improve cookie security
-	store := sessions.NewCookieStore(genSecret())
-	store.MaxAge(36000)
-	store.Options.Path = "/api"
-	store.Options.HttpOnly = true
-	store.Options.Secure = true
-	store.Options.SameSite = http.SameSiteDefaultMode
+	// Use secure cookie store
+	gothInternalSessionStore := sessions.NewCookieStore(genSecret(), genSecret())
+	gothInternalSessionStore.MaxAge(36000)
+	gothInternalSessionStore.Options.Path = "/api"
+	gothInternalSessionStore.Options.HttpOnly = true
+	gothInternalSessionStore.Options.Secure = true
+	gothInternalSessionStore.Options.SameSite = http.SameSiteDefaultMode
 
-	gothic.Store = store
+	gothic.Store = gothInternalSessionStore
 
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), getCallbackURL("google")),
@@ -123,6 +123,23 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
 			} else {
 				log.Info("user updated: ", authUid)
 			}
+		}
+
+		session, err := sessionStore.Get(ctx.Request, "app_session")
+		if err != nil {
+			log.ErrorWithDetail("failed to get session", err)
+			ctx.Status(http.StatusInternalServerError)
+			return
+		}
+
+		session.Values["user_id"] = dbUser.ID
+		session.Values["auth_uid"] = authUid
+
+		err = session.Save(ctx.Request, ctx.Writer)
+		if err != nil {
+			log.ErrorWithDetail("failed to save session", err)
+			ctx.Status(http.StatusInternalServerError)
+			return
 		}
 
 		hostname := ctx.Request.Host
