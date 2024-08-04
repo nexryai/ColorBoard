@@ -3,11 +3,12 @@ package account
 import (
 	"github.com/nexryai/ColorBoard/db"
 	"github.com/nexryai/ColorBoard/internal/database"
+	"github.com/nexryai/ColorBoard/internal/service"
 )
 
 type UserServices struct{}
 
-func (us *UserServices) CreateUser(user *db.UserModel) (string, error) {
+func (us *UserServices) CreateUser(user *service.UserCreateParam) (string, error) {
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return "", err
@@ -27,16 +28,30 @@ func (us *UserServices) CreateUser(user *db.UserModel) (string, error) {
 	return created.ID, nil
 }
 
-func (us *UserServices) GetUser(param *db.UserEqualsUniqueWhereParam) (*db.UserModel, error) {
+func (us *UserServices) GetUser(param db.UserEqualsUniqueWhereParam) (*db.UserModel, error) {
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := prisma.User.FindUnique(*param).Exec(ctx)
+	user, err := prisma.User.FindUnique(param).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	return user, nil
+}
+
+func (us *UserServices) UpdateAvatarUrl(param db.UserEqualsUniqueWhereParam, avatarUrl string) error {
+	prisma, ctx, err := database.GetPrismaClient()
+	if err != nil {
+		return err
+	}
+
+	_, err = prisma.User.FindUnique(param).Update(db.User.AvatarURL.Set(avatarUrl)).Exec(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
