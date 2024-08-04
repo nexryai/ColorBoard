@@ -48,5 +48,8 @@ func Boot() {
 
 	// Start the server
 	log.Info("Starting server...")
-	router.Run(":8080")
+	err := router.Run(":8080")
+	if err != nil {
+		log.FatalWithDetail("Failed to start server", err)
+	}
 }
