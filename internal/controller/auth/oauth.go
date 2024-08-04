@@ -17,12 +17,11 @@ import (
 )
 
 var (
-	appUrl = os.Getenv("APP_URL")
-	log    = logger.GetLogger("OAuth")
+	log = logger.GetLogger("OAuth")
 )
 
 func getCallbackURL(provider string) string {
-	return fmt.Sprintf("%s/auth/%s/callback", appUrl, provider)
+	return fmt.Sprintf("%s/auth/%s/callback", os.Getenv("APP_URL"), provider)
 }
 
 func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
@@ -30,6 +29,16 @@ func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
 }
 
 func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService) {
+	if os.Getenv("APP_URL") == "" {
+		log.Fatal("APP_URL is not set")
+		os.Exit(1)
+	}
+
+	if os.Getenv("GOOGLE_KEY") == "" || os.Getenv("GOOGLE_SECRET") == "" {
+		log.Fatal("GOOGLE_KEY or GOOGLE_SECRET is not set")
+		os.Exit(1)
+	}
+
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), getCallbackURL("google")),
 		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), getCallbackURL("azuread"), nil),
