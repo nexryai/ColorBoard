@@ -21,7 +21,6 @@ func (us *UserServices) CreateUser(user *service.UserCreateParam) (string, error
 	created, err := prisma.User.CreateOne(
 		db.User.Name.Set(user.Name),
 		db.User.AuthUID.Set(user.AuthUID),
-		db.User.Galleries.Link(nil),
 		db.User.AvatarURL.Set(user.AvatarUrl),
 	).Exec(ctx)
 
