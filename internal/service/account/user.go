@@ -55,3 +55,7 @@ func (us *UserServices) UpdateAvatarUrl(param db.UserEqualsUniqueWhereParam, ava
 
 	return nil
 }
+
+func NewUserServices() *UserServices {
+	return &UserServices{}
+}
