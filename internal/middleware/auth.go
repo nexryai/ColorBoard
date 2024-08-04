@@ -1,28 +1,42 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/markbates/goth/gothic"
+	"github.com/gorilla/sessions"
 	"github.com/nexryai/ColorBoard/internal/logger"
+	"strings"
 )
 
 var (
 	log = logger.GetLogger("AuthMiddleware")
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(sessionStore *sessions.CookieStore) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		session, err := gothic.Store.Get(ctx.Request, gothic.SessionName)
-		if err != nil {
-			log.ErrorWithDetail("Failed to get session", err)
-			ctx.AbortWithStatusJSON(500, gin.H{
-				"error": "Failed to get session",
-			})
+		path := ctx.Request.URL.Path
+		needAuth := false
+
+		if strings.HasPrefix(path, "/api/") {
+			if strings.HasPrefix(path, "/api/oauth/") && strings.HasSuffix(path, "/callback") {
+				needAuth = false
+			} else {
+				needAuth = true
+			}
 		}
 
-		for k, v := range session.Values {
-			log.Info(fmt.Sprintf("Key: %s, Value: %v", k, v))
+		if needAuth {
+			session, err := sessionStore.Get(ctx.Request, "app_session")
+			if err != nil || len(session.Values) == 0 {
+				log.Info("Unauthorized access")
+				ctx.AbortWithStatusJSON(401, gin.H{
+					"error": "Unauthorized",
+				})
+
+				return
+			}
+
+			ctx.Set("userId", session.Values["user_id"].(string))
+			ctx.Set("authUid", session.Values["auth_uid"].(string))
 		}
 
 		ctx.Next()
