@@ -75,6 +75,18 @@ func ServeClient(router *gin.Engine) {
 		serveFromClientFS(ctx, "wasm")
 	})
 
+	// favicon.ico
+	router.GET("/favicon.png", func(ctx *gin.Context) {
+		rawFile, err := clientDistFS.Open(clientDistPrefix + "/favicon.png")
+		if err != nil {
+			ctx.Status(http.StatusNotFound)
+			return
+		}
+
+		ctx.Status(http.StatusOK)
+		_, _ = io.Copy(ctx.Writer, rawFile)
+	})
+
 	// Serve the index.html
 	router.NoRoute(func(ctx *gin.Context) {
 		rawFile, err := clientDistFS.Open(clientDistPrefix + "/200.html")
