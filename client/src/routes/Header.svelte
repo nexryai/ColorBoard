@@ -1,5 +1,5 @@
 <script lang="ts">
-    import logo from "$lib/images/hummingbird.webp"
+    import logo from "$lib/images/logo.webp"
 	import AntennaBarsOff from "@tabler/icons-svelte/icons/antenna-bars-off"
 	import AntennaBars_2 from "@tabler/icons-svelte/icons/antenna-bars-2"
 	import AntennaBars_3 from "@tabler/icons-svelte/icons/antenna-bars-3"
