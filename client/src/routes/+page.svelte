@@ -50,9 +50,6 @@
                 <p class="w-[150px] mt-2 truncate">Honkai: StarRail Screenshots</p>
             </a>
         </div>
-        <div class="floating-button">
-
-        </div>
     {/if}
 
 </section>
@@ -125,11 +122,5 @@
     .center-container {
         text-align: left;
         min-height: 85vh;
-    }
-
-    .floating-button {
-        position: fixed;
-        right: 7.5vw;
-        bottom: 8vh;
     }
 </style>
