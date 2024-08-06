@@ -33,7 +33,7 @@
             </div>
         </div>
     {:else}
-        <div class="center-container w-[85vw]">
+        <div class="center-container">
             <p class="text-2xl">Galleries</p>
             <a href="/galleries/1" class="w-[150px]">
                 <div class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl">
