@@ -33,7 +33,19 @@
             </div>
         </div>
     {:else}
-        <p>ToDo: Logged in</p>
+        <div class="center-container w-[85vw]">
+            <p class="text-2xl">Galleries</p>
+            <a href="/galleries/1" class="w-[150px]">
+                <div class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl">
+                    <img
+                            class="gallery-box h-[150px] aspect-auto object-cover"
+                            src="https://s3.sda1.net/nnm/contents/5c384023-8a07-4968-9328-c0b89ada05d7.jpg"
+                            alt=""
+                    />
+                </div>
+                <p class="w-[150px] mt-2 truncate">Honkai: StarRail Screenshots</p>
+            </a>
+        </div>
         <div class="floating-button">
             <AddGalleryFloatingButton />
         </div>
@@ -42,14 +54,6 @@
 </section>
 
 <style lang="scss">
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
     .login-form {
         width: 720px;
         border: solid #e1e1e1 1px;
@@ -114,9 +118,14 @@
         }
     }
 
+    .center-container {
+        text-align: left;
+        min-height: 85vh;
+    }
+
     .floating-button {
         position: fixed;
-        right: 8vw;
+        right: 7.5vw;
         bottom: 8vh;
     }
 </style>
