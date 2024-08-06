@@ -3,7 +3,7 @@
     import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
     import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
     import { isLoggedIn } from "$lib/account"
-    import AddGalleryFloatingButton from "$lib/components/AddGalleryFloatingButton.svelte";
+    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte";
 </script>
 
 <section>
@@ -34,7 +34,11 @@
         </div>
     {:else}
         <div class="center-container">
-            <p class="text-2xl">Galleries</p>
+            <div class="flex justify-between items-center">
+                <p class="text-2xl">Galleries</p>
+                <AddGalleryButton />
+            </div>
+
             <a href="/galleries/1" class="w-[150px]">
                 <div class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl">
                     <img
@@ -47,7 +51,7 @@
             </a>
         </div>
         <div class="floating-button">
-            <AddGalleryFloatingButton />
+
         </div>
     {/if}
 

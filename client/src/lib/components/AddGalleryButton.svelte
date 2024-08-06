@@ -65,8 +65,9 @@
 <div>
     <Dialog.Root bind:open>
         <Dialog.Trigger>
-            <Button size="icon" class="w-[50px] h-[50px] shadow-lg rounded-full">
+            <Button variant="outline">
                 <IconPlus />
+                　Add
             </Button>
         </Dialog.Trigger>
 
