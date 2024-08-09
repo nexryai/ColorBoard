@@ -1,15 +1,10 @@
 datasource db {
-	provider = "postgresql"
+	provider = "sqlite"
 	url      = env("DATABASE_URL")
 }
 
 generator db{
 	provider = "go run github.com/steebchen/prisma-client-go"
-}
-
-enum GalleryVisibility {
-	PRIVATE
-	PUBLIC
 }
 
 model User {
@@ -28,7 +23,7 @@ model Gallery {
 	name          String
 	createdAt     DateTime       @default(now())
 	updatedAt     DateTime       @updatedAt
-	visibility    GalleryVisibility
+	isPublic      Boolean        @default(false)
 	userId        String
 	user          User           @relation(fields: [userId], references: [id])
 	images        Image[]
