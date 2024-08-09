@@ -1,6 +1,16 @@
 version: '3'
 
 tasks:
+  install:
+    cmds:
+      - go run github.com/steebchen/prisma-client-go generate
+      - cd ./client && yarn install
+  
+  gensql:
+    cmds:
+      - DATABASE_URL=file:./data.db go run github.com/steebchen/prisma-client-go db push
+      - DATABASE_URL=file:./data.db npx prisma migrate diff --from-empty --to-schema-datasource schema.prisma --script > db/init.sql
+
   debug:
     cmds:
       - cd ./client && yarn build
