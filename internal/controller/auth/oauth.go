@@ -130,6 +130,10 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 			log.ErrorWithDetail("failed to get session", err)
 			ctx.Status(http.StatusInternalServerError)
 			return
+		} else if session == nil {
+			log.Error("Session is nil")
+			ctx.Status(http.StatusInternalServerError)
+			return
 		}
 
 		session.Values["user_id"] = dbUser.ID
