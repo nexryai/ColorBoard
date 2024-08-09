@@ -11,6 +11,12 @@ var (
 	log = logger.GetLogger("AuthMiddleware")
 )
 
+// AuthMiddleware is a middleware function that handles authentication for API routes.
+// It checks if the request path starts with "/api/" and if authentication is required.
+// If authentication is required, it checks if the user is authorized by checking the session values.
+// If the user is not authorized, it returns a 401 Unauthorized response.
+// If the user is authorized, it sets the "userId" and "authUid" values in the context and proceeds to the next middleware or handler.
+// The sessionStore parameter is a pointer to a sessions.CookieStore used to retrieve session values.
 func AuthMiddleware(sessionStore *sessions.CookieStore) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		path := ctx.Request.URL.Path
