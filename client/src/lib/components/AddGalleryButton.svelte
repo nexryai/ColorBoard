@@ -28,7 +28,7 @@
         errorMessage = ""
     }
 
-    const addFeed = () => {
+    const addGallery = () => {
         isLoading = true
 
         if (!galleryName) {
@@ -40,18 +40,18 @@
 
         callApi(
             "post",
-            "/api/gallery/add",
+            "/api/gallery/create",
             {
                 name: galleryName,
                 isPublic: isPublic
             }
         ).catch((error) => {
             console.error(error)
-            errorMessage = "Failed to add feed: " + error
+            errorMessage = "Failed to create gallery: " + error
             showErrorMessage = true
         }).then(() => {
             open = false
-            toast.success("Feed added successfully!", {
+            toast.success("Created successfully!", {
                 description:"Please reload the page to see the changes."}
             )
         }).finally(() => {
@@ -109,7 +109,7 @@
                 </div>
             </div>
             <Dialog.Footer>
-                <Button class="mt-[10px]" variant="default" disabled={isLoading} on:click={addFeed}>
+                <Button class="mt-[10px]" variant="default" disabled={isLoading} on:click={addGallery}>
                     {#if isLoading}
                         <IconLoader2 size={21} class="animate-spin" style="margin-right: 10px"/>
                         Adding...
