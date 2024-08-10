@@ -1,87 +1,82 @@
 <script lang="ts">
+	import { onMount } from "svelte"
     import logo from "$lib/images/logo.webp"
-	import AntennaBarsOff from "@tabler/icons-svelte/icons/antenna-bars-off"
-	import AntennaBars_2 from "@tabler/icons-svelte/icons/antenna-bars-2"
-	import AntennaBars_3 from "@tabler/icons-svelte/icons/antenna-bars-3"
-	import AntennaBars_4 from "@tabler/icons-svelte/icons/antenna-bars-4"
-    import AntennaBars_5 from "@tabler/icons-svelte/icons/antenna-bars-5"
-	import {browser} from "$app/environment"
+	import { refreshSession } from "$lib/account"
+	import CloudCheck from "@tabler/icons-svelte/icons/cloud-check"
+	import CloudUp from "@tabler/icons-svelte/icons/cloud-up"
+	import CloudQuestion from "@tabler/icons-svelte/icons/cloud-question"
+	import CloudExclamation from "@tabler/icons-svelte/icons/cloud-exclamation"
+    import CloudX from "@tabler/icons-svelte/icons/cloud-x"
+	import { browser } from "$app/environment"
 
-	enum ConnectionStatus {
+
+	interface StorageStatusAPI {
+		total: number
+		free: number
+		used: number
+	}
+
+	enum StorageStatus {
 		Unknown,
 		Green,
 		Yellow,
 		Red
 	}
-	let status = ConnectionStatus.Unknown
-	let pingIsTooHigh = false
-	let isOffline = false
-	let ping = 0
 
-	// @ts-ignore
-	let ws = null
-	if (!browser) {
-	    ws = null
-	} else {
-	    // 現在のURLから生成
-	    const url = window.location.href
-	    let protocol = "wss://"
-	    if (url.startsWith("http://")) {
-	        console.log("Unsecure connection. Do not use in production.")
-	        protocol = "ws://"
-	    }
+	let status = StorageStatus.Unknown
+	let isUploading = globalThis.isUploading || false
+	let usedPercentage = 0
 
-	    const host = new URL(url).host
-	    ws = new WebSocket(protocol + host + "/ping")
+    onMount(() => {
+        const updateUploadingStatus = () => {
+            isUploading = globalThis.isUploading
+        }
+
+        // グローバル変数の変更を監視
+        window.addEventListener("isUploadingChange", updateUploadingStatus)
+
+        return () => {
+            window.removeEventListener("isUploadingChange", updateUploadingStatus)
+        }
+    });
+
+	// Get storage status from /api/system/storage-status
+	const getStorageStatus = async () => {
+		const response = await fetch("/api/system/storage-status")
+		if (!response.ok) {
+			if (response.status === 401) {
+				refreshSession()
+			}
+
+			status = StorageStatus.Unknown
+			return
+		}
+
+		const data = await response.json()
+		const storageStatus = data as StorageStatusAPI
+
+		if (storageStatus.total === 0) {
+			status = StorageStatus.Unknown
+		} else {
+			usedPercentage = Math.round((storageStatus.used / storageStatus.total) * 100)
+
+			if (usedPercentage < 70) {
+				status = StorageStatus.Green
+			} else if (usedPercentage < 90) {
+				status = StorageStatus.Yellow
+			} else {
+				status = StorageStatus.Red
+			}
+		}
 	}
 
-	ws?.addEventListener("open", function open() {
-	    console.log("connected")
-	    // @ts-ignore
-	    ws.send(Date.now())
-	})
+	getStorageStatus()
 
-	ws?.addEventListener("error", function error() {
-	    status = ConnectionStatus.Red
-	    ping = 999
-	    isOffline = true
-	})
-
-	ws?.addEventListener("close", function close() {
-	    status = ConnectionStatus.Red
-	    ping = 999
-	    isOffline = true
-	})
-
-	ws?.addEventListener("message", function incoming(event) {
-	    const message = event.data
-	    const pong = Date.now() - parseInt(message)
-	    if (pong <= 999) {
-	        ping = pong
-	    } else {
-	        // 3桁を超える場合は999にする
-	        ping = 999
-	    }
-
-	    if (pong < 100) {
-	        status = ConnectionStatus.Green
-	    } else if (pong < 200) {
-	        status = ConnectionStatus.Yellow
-	    } else {
-	        status = ConnectionStatus.Red
-	    }
-
-	    if (pong > 300) {
-	        pingIsTooHigh = true
-	    } else {
-	        pingIsTooHigh = false
-	    }
-
-	    setTimeout(() => {
-	        // @ts-ignore
-	        ws.send(Date.now())
-	    }, 3000)
-	})
+	// Every 5 seconds
+	setInterval(() => {
+		getStorageStatus()
+	}, 5000)
+	
 </script>
 
 <header>
@@ -96,23 +91,23 @@
 	<div class="corner">
         <div
 				class="header-icons"
-				class:icon-gray={status === ConnectionStatus.Unknown}
-				class:icon-green={status === ConnectionStatus.Green}
-				class:icon-yellow={status === ConnectionStatus.Yellow}
-				class:icon-red={status === ConnectionStatus.Red}
+				class:icon-gray={status === StorageStatus.Unknown}
+				class:icon-green={status === StorageStatus.Green}
+				class:icon-yellow={status === StorageStatus.Yellow}
+				class:icon-red={status === StorageStatus.Red}
 		>
-			{#if status === ConnectionStatus.Unknown || isOffline}
-				<AntennaBarsOff class="antenna-icon" />
-			{:else if status === ConnectionStatus.Green}
-				<AntennaBars_5 class="antenna-icon" />
-			{:else if status === ConnectionStatus.Yellow}
-				<AntennaBars_4 style="margin-top: 11px;" />
-			{:else if status === ConnectionStatus.Red && !pingIsTooHigh}
-				<AntennaBars_3 style="margin-top: 11px;" />
-			{:else if pingIsTooHigh}
-				<AntennaBars_2 style="margin-top: 11px;" />
+			{#if isUploading}
+				<CloudUp class="mt-[11px] mr-1" />
+			{:else if status === StorageStatus.Green}
+				<CloudCheck class="mt-[11px] mr-1" />
+			{:else if status === StorageStatus.Unknown}
+				<CloudQuestion class="mt-[11px] mr-1" />
+			{:else if status === StorageStatus.Yellow}
+				<CloudExclamation class="mt-[11px] mr-1" />
+			{:else if status === StorageStatus.Red}
+				<CloudX class="mt-[11px] mr-1" />
 			{/if}
-            <span>{ping}ms</span>
+            <span>{usedPercentage}%</span>
         </div>
 	</div>
 </header>
