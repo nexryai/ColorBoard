@@ -18,7 +18,6 @@ func handleAccountInfoAPI(ctx *gin.Context, userService service.IUserService) {
 	}
 
 	ctx.JSON(200, user)
-	return
 }
 
 func ConfigAccountAPIRouter(router *gin.Engine, userService service.IUserService) {
