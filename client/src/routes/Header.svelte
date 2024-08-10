@@ -71,10 +71,10 @@
 
 	getStorageStatus()
 
-	// Every 5 seconds
+	// Every 30 seconds
 	setInterval(() => {
 		getStorageStatus()
-	}, 5000)
+	}, 30000)
 	
 </script>
 
