@@ -45,6 +45,7 @@ func Boot() {
 
 	// Config API routers
 	apiController.ConfigAccountAPIRouter(router, userService)
+	apiController.ConfigSystemAPIRouter(router)
 
 	// Start the server
 	log.Info("Starting server...")
