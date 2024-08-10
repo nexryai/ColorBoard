@@ -19,6 +19,7 @@ func (gs *GalleryService) CreateGallery(gallery *service.GalleryCreateParam) (st
 		db.Gallery.User.Link(
 			db.User.ID.Equals(gallery.UserId),
 		),
+		db.Gallery.IsPublic.Set(gallery.IsPublic),
 	).Exec(ctx)
 
 	if err != nil {

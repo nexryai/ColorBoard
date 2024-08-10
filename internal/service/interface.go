@@ -13,8 +13,9 @@ type UserCreateParam struct {
 }
 
 type GalleryCreateParam struct {
-	Name   string
-	UserId string
+	Name     string
+	IsPublic bool
+	UserId   string
 }
 
 type (
