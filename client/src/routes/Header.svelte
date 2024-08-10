@@ -5,7 +5,7 @@
 	import AntennaBars_3 from "@tabler/icons-svelte/icons/antenna-bars-3"
 	import AntennaBars_4 from "@tabler/icons-svelte/icons/antenna-bars-4"
     import AntennaBars_5 from "@tabler/icons-svelte/icons/antenna-bars-5"
-	import {browser} from "$app/environment";
+	import {browser} from "$app/environment"
 
 	enum ConnectionStatus {
 		Unknown,
@@ -21,66 +21,66 @@
 	// @ts-ignore
 	let ws = null
 	if (!browser) {
-		ws = null;
+	    ws = null
 	} else {
-		// 現在のURLから生成
-		const url = window.location.href
-		let protocol = "wss://"
-		if (url.startsWith("http://")) {
-			console.log("Unsecure connection. Do not use in production.")
-			protocol = "ws://"
-		}
+	    // 現在のURLから生成
+	    const url = window.location.href
+	    let protocol = "wss://"
+	    if (url.startsWith("http://")) {
+	        console.log("Unsecure connection. Do not use in production.")
+	        protocol = "ws://"
+	    }
 
-		const host = new URL(url).host
-		ws = new WebSocket(protocol + host + "/ping")
+	    const host = new URL(url).host
+	    ws = new WebSocket(protocol + host + "/ping")
 	}
 
 	ws?.addEventListener("open", function open() {
-		console.log("connected");
-		// @ts-ignore
-		ws.send(Date.now());
+	    console.log("connected")
+	    // @ts-ignore
+	    ws.send(Date.now())
 	})
 
 	ws?.addEventListener("error", function error() {
-		status = ConnectionStatus.Red;
-		ping = 999;
-		isOffline = true;
+	    status = ConnectionStatus.Red
+	    ping = 999
+	    isOffline = true
 	})
 
 	ws?.addEventListener("close", function close() {
-		status = ConnectionStatus.Red;
-		ping = 999;
-		isOffline = true;
+	    status = ConnectionStatus.Red
+	    ping = 999
+	    isOffline = true
 	})
 
 	ws?.addEventListener("message", function incoming(event) {
-		const message = event.data;
-		const pong = Date.now() - parseInt(message);
-		if (pong <= 999) {
-			ping = pong;
-		} else {
-			// 3桁を超える場合は999にする
-			ping = 999;
-		}
+	    const message = event.data
+	    const pong = Date.now() - parseInt(message)
+	    if (pong <= 999) {
+	        ping = pong
+	    } else {
+	        // 3桁を超える場合は999にする
+	        ping = 999
+	    }
 
-		if (pong < 100) {
-			status = ConnectionStatus.Green;
-		} else if (pong < 200) {
-			status = ConnectionStatus.Yellow;
-		} else {
-			status = ConnectionStatus.Red;
-		}
+	    if (pong < 100) {
+	        status = ConnectionStatus.Green
+	    } else if (pong < 200) {
+	        status = ConnectionStatus.Yellow
+	    } else {
+	        status = ConnectionStatus.Red
+	    }
 
-		if (pong > 300) {
-			pingIsTooHigh = true;
-		} else {
-			pingIsTooHigh = false;
-		}
+	    if (pong > 300) {
+	        pingIsTooHigh = true
+	    } else {
+	        pingIsTooHigh = false
+	    }
 
-		setTimeout(() => {
-			// @ts-ignore
-			ws.send(Date.now());
-		}, 3000);
+	    setTimeout(() => {
+	        // @ts-ignore
+	        ws.send(Date.now())
+	    }, 3000)
 	})
 </script>
 
@@ -180,16 +180,6 @@
 		height: 2em;
         margin-left: 15px;
 		object-fit: contain;
-	}
-
-	svg {
-		width: 2em;
-		height: 3em;
-		display: block;
-	}
-
-	path {
-		fill: var(--background);
 	}
 
 	a:hover {

@@ -3,7 +3,7 @@
     import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
     import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
     import { isLoggedIn } from "$lib/account"
-    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte";
+    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
 </script>
 
 <section>

@@ -11,6 +11,11 @@ tasks:
       - DATABASE_URL=file:./data.db go run github.com/steebchen/prisma-client-go db push
       - DATABASE_URL=file:./data.db npx prisma migrate diff --from-empty --to-schema-datasource schema.prisma --script > db/init.sql
 
+  build:
+    cmds:
+      - cd ./client && yarn licenses generate-disclaimer > client/static/third-party-licenses
+      - cd ./client && yarn build
+
   debug:
     cmds:
       - cd ./client && yarn build
