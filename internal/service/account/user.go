@@ -12,6 +12,8 @@ func (us *UserServices) CreateUser(user *service.UserCreateParam) (string, error
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return "", err
+	} else {
+		defer prisma.Prisma.Disconnect()
 	}
 
 	if user.AvatarUrl == "" {
@@ -35,6 +37,8 @@ func (us *UserServices) GetUser(param db.UserEqualsUniqueWhereParam) (*db.UserMo
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return nil, err
+	} else {
+		defer prisma.Prisma.Disconnect()
 	}
 
 	user, err := prisma.User.FindUnique(param).Exec(ctx)
@@ -49,6 +53,8 @@ func (us *UserServices) UpdateAvatarUrl(param db.UserEqualsUniqueWhereParam, ava
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return err
+	} else {
+		defer prisma.Prisma.Disconnect()
 	}
 
 	_, err = prisma.User.FindUnique(param).Update(db.User.AvatarURL.Set(avatarUrl)).Exec(ctx)
