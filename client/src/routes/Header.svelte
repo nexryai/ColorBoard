@@ -7,7 +7,6 @@
 	import CloudQuestion from "@tabler/icons-svelte/icons/cloud-question"
 	import CloudExclamation from "@tabler/icons-svelte/icons/cloud-exclamation"
     import CloudX from "@tabler/icons-svelte/icons/cloud-x"
-	import { browser } from "$app/environment"
 
 
 	interface StorageStatusAPI {
