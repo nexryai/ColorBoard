@@ -1,6 +1,8 @@
 package boot
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
@@ -10,7 +12,7 @@ import (
 	"github.com/nexryai/ColorBoard/internal/middleware"
 	"github.com/nexryai/ColorBoard/internal/server"
 	"github.com/nexryai/ColorBoard/internal/service/account"
-	"net/http"
+	"github.com/nexryai/ColorBoard/internal/service/gallery"
 )
 
 var (
@@ -33,6 +35,7 @@ func Boot() {
 	// Resolve dependencies
 	log.Info("Initializing services and resolving dependencies...")
 	userService := account.NewUserServices()
+	galleryService := gallery.NewGalleryService()
 
 	// Boot the server
 	log.Info("Configuring routes...")
@@ -45,6 +48,7 @@ func Boot() {
 
 	// Config API routers
 	apiController.ConfigAccountAPIRouter(router, userService)
+	apiController.ConfigGalleryAPIRouter(router, galleryService)
 	apiController.ConfigSystemAPIRouter(router)
 
 	// Start the server
