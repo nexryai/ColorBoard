@@ -62,6 +62,9 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 
 	router.GET("/auth/:provider", func(ctx *gin.Context) {
 		provider := ctx.Param("provider")
+
+		// remove session cookie
+		ctx.SetCookie("app_session", "DUMMY", -1, "/api", ctx.Request.Host, true, true)
 		ctx.Request = contextWithProviderName(ctx, provider)
 
 		gothic.BeginAuthHandler(ctx.Writer, ctx.Request)
@@ -127,6 +130,11 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 
 		session, err := sessionStore.Get(ctx.Request, "app_session")
 		if err != nil {
+			if errors.Is(err, securecookie.ErrMacInvalid) {
+				ctx.Status(http.StatusUnauthorized)
+				return
+			}
+
 			log.ErrorWithDetail("failed to get session", err)
 			ctx.Status(http.StatusInternalServerError)
 			return
