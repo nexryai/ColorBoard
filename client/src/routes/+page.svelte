@@ -1,25 +1,25 @@
 <script lang="ts">
-    import { Button } from "$lib/components/ui/button"
-    import { Skeleton } from "$lib/components/ui/skeleton"
-    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
-    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
-    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
+    import { Button } from "$lib/components/ui/button";
+    import { Skeleton } from "$lib/components/ui/skeleton";
+    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google";
+    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure";
+    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte";
 
-    import { isLoggedIn } from "$lib/account"
-    import { type Gallery, getMyGalleries } from "$lib/api"
+    import { isLoggedIn } from "$lib/account";
+    import { type Gallery, getMyGalleries } from "$lib/api";
 
-    let isLoading = true
-    let galleries: Gallery[]
+    let isLoading = true;
+    let galleries: Gallery[];
 
-    console.log("Fetching galleries...")
+    console.log("Fetching galleries...");
     getMyGalleries()
         .then((res) => {
-            galleries = res
-            isLoading = false
+            galleries = res;
+            isLoading = false;
         })
         .catch((error) => {
-            console.error(error)
-        })
+            console.error(error);
+        });
 </script>
 
 <section>
@@ -71,20 +71,24 @@
             </div>
 
             {#if !isLoading}
-                {#each galleries as gallery}
-                    <a href="/galleries/{gallery.id}" class="w-[150px]">
-                        <div
-                            class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl"
-                        >
-                            <img
-                                class="gallery-box h-[150px] aspect-auto object-cover"
-                                src="https://s3.sda1.net/nnm/contents/5c384023-8a07-4968-9328-c0b89ada05d7.jpg"
-                                alt=""
-                            />
-                        </div>
-                        <p class="w-[150px] mt-2 truncate">{gallery.name}</p>
-                    </a>
-                {/each}
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+                    {#each galleries as gallery}
+                        <a href="/galleries/{gallery.id}" class="w-[150px]">
+                            <div
+                                class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl"
+                            >
+                                <img
+                                    class="gallery-box h-[150px] aspect-auto object-cover"
+                                    src="https://s3.sda1.net/nnm/contents/5c384023-8a07-4968-9328-c0b89ada05d7.jpg"
+                                    alt=""
+                                />
+                            </div>
+                            <p class="w-[150px] mt-2 truncate">
+                                {gallery.name}
+                            </p>
+                        </a>
+                    {/each}
+                </div>
             {:else}
                 <Skeleton class="h-[150px] w-[250px] mt-8" />
             {/if}
