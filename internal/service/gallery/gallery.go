@@ -31,7 +31,7 @@ func (gs *GalleryService) CreateGallery(gallery *service.GalleryCreateParam) (st
 	return created.ID, nil
 }
 
-func (gs *GalleryService) GetGallery(id string) (*db.GalleryModel, error) {
+func (gs *GalleryService) GetGallery(userId string, id string) (*db.GalleryModel, error) {
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return nil, err
@@ -39,8 +39,12 @@ func (gs *GalleryService) GetGallery(id string) (*db.GalleryModel, error) {
 		defer prisma.Prisma.Disconnect()
 	}
 
-	found, err := prisma.Gallery.FindUnique(
-		db.Gallery.ID.Equals(id),
+	// FindUniqueが使えない
+	found, err := prisma.Gallery.FindFirst(
+		db.Gallery.And(
+			db.Gallery.ID.Equals(id),
+			db.Gallery.UserID.Equals(userId),
+		),
 	).Exec(ctx)
 
 	if err != nil {
