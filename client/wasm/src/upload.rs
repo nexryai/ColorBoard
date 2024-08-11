@@ -4,7 +4,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 use ehttp::multipart::MultipartBuilder;
 
-use crate::{enc::encode_to_webp_lossless, thumb::generate_thumbnail};
+use crate::{blurhash::get_blurhash, enc::encode_to_webp_lossless, thumb::generate_thumbnail};
 
 
 #[wasm_bindgen]
@@ -17,22 +17,26 @@ extern "C" {
 pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
     // Encode lossless image
     log("[ColorBoard WASM] Encoding lossless WebP");
-    let mut lossless_data = encode_to_webp_lossless(data.clone());
+    let mut lossless_data = encode_to_webp_lossless(&data);
     
     // Encode thumbnail
     log("[ColorBoard WASM] Encoding thumbnail WebP");
-    let mut thumbnail_data = generate_thumbnail(data);
+    let mut thumbnail_data = generate_thumbnail(&data);
 
     let tmp_id = Uuid::new_v4();
     let filename = format!("{}.webp", tmp_id);
     let thumbnail_filename = format!("{}_thumb.webp", tmp_id);
+
+    // Get blurhash
+    log("[ColorBoard WASM] Calculating blurhash...");
+    let blurhash = get_blurhash(&thumbnail_data);
     
     log("[ColorBoard WASM] Uploading lossless image");
 
     let request = ehttp::Request::multipart(
         format!("/api/gallery/{}/upload", gallery_id),
         MultipartBuilder::new()
-            .add_text("test", "dummy")
+            .add_text("blurhash", &blurhash)
             .add_stream(
                 &mut Cursor::new(&mut lossless_data),
                 &filename,

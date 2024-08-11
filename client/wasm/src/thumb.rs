@@ -1,12 +1,9 @@
 use image::*;
 use std::io::Cursor;
-use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::log;
 
-
-#[wasm_bindgen]
-pub fn generate_thumbnail(data: Vec<u8>) -> Vec<u8> {
+pub fn generate_thumbnail(data: &Vec<u8>) -> Vec<u8> {
     log("[ColorBoard WASM] generating thumbinal...");
 
     // Using `image` crate, open the included .jpg file

@@ -1,6 +1,7 @@
 pub mod upload;
 mod thumb;
 mod enc;
+mod blurhash;
 
 use console_error_panic_hook;
 use wasm_bindgen::prelude::wasm_bindgen;
