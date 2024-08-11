@@ -3,7 +3,7 @@ use std::io::Cursor;
 
 pub fn generate_thumbnail(data: &Vec<u8>) -> Vec<u8> {
     // Using `image` crate, open the included .jpg file
-    let img = image::load_from_memory(&data).unwrap();
+    let img = image::load_from_memory(data).unwrap();
     let (w, h) = img.dimensions();
 
     // 720pのサイズにリサイズ

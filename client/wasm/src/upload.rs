@@ -17,11 +17,11 @@ extern "C" {
 pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
     // Encode lossless image
     log("[ColorBoard WASM] Encoding lossless WebP");
-    let mut lossless_data = encode_to_webp_lossless(&data);
+    let lossless_data = encode_to_webp_lossless(&data);
     
     // Encode thumbnail
     log("[ColorBoard WASM] Encoding thumbnail WebP");
-    let mut thumbnail_data = generate_thumbnail(&data);
+    let thumbnail_data = generate_thumbnail(&data);
 
     let tmp_id = Uuid::new_v4();
     let filename = format!("{}.webp", tmp_id);
@@ -38,14 +38,14 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
         MultipartBuilder::new()
             .add_text("blurhash", &blurhash)
             .add_stream(
-                &mut Cursor::new(&mut lossless_data),
+                &mut Cursor::new(&lossless_data),
                 &filename,
                 Some(&filename),
                 None,
             )
             .unwrap()
             .add_stream(
-                &mut Cursor::new(&mut thumbnail_data),
+                &mut Cursor::new(&thumbnail_data),
                 &thumbnail_filename,
                 Some(&thumbnail_filename),
                 None,
