@@ -27,7 +27,7 @@ type (
 	}
 	IGalleryService interface {
 		CreateGallery(gallery *GalleryCreateParam) (string, error)
-		GetGallery(param db.GalleryEqualsUniqueWhereParam) (*db.GalleryModel, error)
+		GetGallery(id string) (*db.GalleryModel, error)
 		/*AddImage(reader io.Reader, gallery *db.GalleryModel) (string, error)*/
 	}
 	IStorageService interface {

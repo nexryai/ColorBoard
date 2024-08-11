@@ -31,7 +31,7 @@ func (gs *GalleryService) CreateGallery(gallery *service.GalleryCreateParam) (st
 	return created.ID, nil
 }
 
-func (gs *GalleryService) GetGallery(param db.GalleryEqualsUniqueWhereParam) (*db.GalleryModel, error) {
+func (gs *GalleryService) GetGallery(id string) (*db.GalleryModel, error) {
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return nil, err
@@ -39,7 +39,10 @@ func (gs *GalleryService) GetGallery(param db.GalleryEqualsUniqueWhereParam) (*d
 		defer prisma.Prisma.Disconnect()
 	}
 
-	user, err := prisma.Gallery.FindUnique(param).Exec(ctx)
+	user, err := prisma.Gallery.FindUnique(
+		db.Gallery.ID.Equals(id),
+	).Exec(ctx)
+	
 	if err != nil {
 		return nil, err
 	}
