@@ -77,7 +77,10 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
         let mut status = status_code_clone.lock().unwrap();
         match response {
             Ok(response) => *status = response.status,
-            Err(_) => *status = 0,  // エラーが発生した場合は0を設定
+            Err(e) => {
+                log(&format!("[Error] Failed to create multipart request: {}", e));
+                *status = 0;
+            }// エラーが発生した場合は0を設定
         }
         log("[ColorBoard WASM] Done");
     });
