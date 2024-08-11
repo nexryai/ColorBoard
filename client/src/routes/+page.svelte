@@ -3,9 +3,9 @@
     import { Skeleton } from "$lib/components/ui/skeleton"
     import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
     import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
-    import { isLoggedIn } from "$lib/account"
     import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
 
+    import { isLoggedIn } from "$lib/account"
     import { type Gallery, getMyGalleries } from "$lib/api"
 
     let isLoading = true
