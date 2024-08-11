@@ -128,7 +128,6 @@ dependencies = [
  "console_error_panic_hook",
  "ehttp",
  "image",
- "mime",
  "uuid",
  "wasm-bindgen",
 ]
