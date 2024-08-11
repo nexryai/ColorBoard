@@ -39,15 +39,34 @@ func (gs *GalleryService) GetGallery(id string) (*db.GalleryModel, error) {
 		defer prisma.Prisma.Disconnect()
 	}
 
-	user, err := prisma.Gallery.FindUnique(
+	found, err := prisma.Gallery.FindUnique(
 		db.Gallery.ID.Equals(id),
 	).Exec(ctx)
-	
+
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return found, nil
+}
+
+func (gs *GalleryService) GetGalleriesByUserId(userId string) (*[]db.GalleryModel, error) {
+	prisma, ctx, err := database.GetPrismaClient()
+	if err != nil {
+		return nil, err
+	} else {
+		defer prisma.Prisma.Disconnect()
+	}
+
+	found, err := prisma.Gallery.FindMany(
+		db.Gallery.UserID.Contains(userId),
+	).Exec(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &found, nil
 }
 
 func NewGalleryService() *GalleryService {
