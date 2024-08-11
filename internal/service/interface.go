@@ -21,6 +21,7 @@ type GalleryCreateParam struct {
 type (
 	IUserService interface {
 		CreateUser(user *UserCreateParam) (string, error)
+		// ToDo: paramやめて識別子をuserIdで統一する（現状AuthUIDで見つけてる部分がある）
 		GetUser(param db.UserEqualsUniqueWhereParam) (*db.UserModel, error)
 		UpdateAvatarUrl(param db.UserEqualsUniqueWhereParam, avatarUrl string) error
 	}
