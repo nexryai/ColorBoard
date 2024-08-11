@@ -60,6 +60,9 @@ func (gs *GalleryService) GetGalleriesByUserId(userId string) (*[]db.GalleryMode
 
 	found, err := prisma.Gallery.FindMany(
 		db.Gallery.UserID.Contains(userId),
+	).With(
+		// Used for a thumbnail
+		db.Gallery.Images.Fetch().Take(1),
 	).Exec(ctx)
 
 	if err != nil {
