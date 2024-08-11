@@ -1,11 +1,7 @@
 use image::*;
 use std::io::Cursor;
 
-use crate::log;
-
 pub fn generate_thumbnail(data: &Vec<u8>) -> Vec<u8> {
-    log("[ColorBoard WASM] generating thumbinal...");
-
     // Using `image` crate, open the included .jpg file
     let img = image::load_from_memory(&data).unwrap();
     let (w, h) = img.dimensions();
