@@ -37,43 +37,43 @@
         return () => {
             window.removeEventListener("isUploadingChange", updateUploadingStatus)
         }
-    });
+    })
 
 	// Get storage status from /api/system/storage-status
 	const getStorageStatus = async () => {
-		const response = await fetch("/api/system/storage-status")
-		if (!response.ok) {
-			if (response.status === 401) {
-				refreshSession()
-			}
+	    const response = await fetch("/api/system/storage-status")
+	    if (!response.ok) {
+	        if (response.status === 401) {
+	            refreshSession()
+	        }
 
-			status = StorageStatus.Unknown
-			return
-		}
+	        status = StorageStatus.Unknown
+	        return
+	    }
 
-		const data = await response.json()
-		const storageStatus = data as StorageStatusAPI
+	    const data = await response.json()
+	    const storageStatus = data as StorageStatusAPI
 
-		if (storageStatus.total === 0) {
-			status = StorageStatus.Unknown
-		} else {
-			usedPercentage = Math.round((storageStatus.used / storageStatus.total) * 100)
+	    if (storageStatus.total === 0) {
+	        status = StorageStatus.Unknown
+	    } else {
+	        usedPercentage = Math.round((storageStatus.used / storageStatus.total) * 100)
 
-			if (usedPercentage < 70) {
-				status = StorageStatus.Green
-			} else if (usedPercentage < 90) {
-				status = StorageStatus.Yellow
-			} else {
-				status = StorageStatus.Red
-			}
-		}
+	        if (usedPercentage < 70) {
+	            status = StorageStatus.Green
+	        } else if (usedPercentage < 90) {
+	            status = StorageStatus.Yellow
+	        } else {
+	            status = StorageStatus.Red
+	        }
+	    }
 	}
 
 	getStorageStatus()
 
 	// Every 30 seconds
 	setInterval(() => {
-		getStorageStatus()
+	    getStorageStatus()
 	}, 30000)
 	
 </script>

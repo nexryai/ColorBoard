@@ -4,6 +4,21 @@
     import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
     import { isLoggedIn } from "$lib/account"
     import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
+
+    import { type Gallery, getMyGalleries } from "$lib/api"
+
+    let isLoading = true
+    let galleries: Gallery[]
+
+    console.log("Fetching galleries...")
+    getMyGalleries()
+        .then((res) => {
+            isLoading = false
+            galleries = res
+        })
+        .catch((error) => {
+            console.error(error)
+        })
 </script>
 
 <section>
@@ -13,17 +28,32 @@
                 <p class="box-title">Welcome back</p>
                 <div class="box-bottom">
                     <div class="form-large-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1 5C1 4.44772 1.44772 4 2 4H22C22.5523 4 23 4.44772 23 5V19C23 19.5523 22.5523 20 22 20H2C1.44772 20 1 19.5523 1 19V5ZM13 8V10H19V8H13ZM18 12H13V14H18V12ZM10.5 10C10.5 8.61929 9.38071 7.5 8 7.5C6.61929 7.5 5.5 8.61929 5.5 10C5.5 11.3807 6.61929 12.5 8 12.5C9.38071 12.5 10.5 11.3807 10.5 10ZM8 13.5C6.067 13.5 4.5 15.067 4.5 17H11.5C11.5 15.067 9.933 13.5 8 13.5Z"></path></svg>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            ><path
+                                d="M1 5C1 4.44772 1.44772 4 2 4H22C22.5523 4 23 4.44772 23 5V19C23 19.5523 22.5523 20 22 20H2C1.44772 20 1 19.5523 1 19V5ZM13 8V10H19V8H13ZM18 12H13V14H18V12ZM10.5 10C10.5 8.61929 9.38071 7.5 8 7.5C6.61929 7.5 5.5 8.61929 5.5 10C5.5 11.3807 6.61929 12.5 8 12.5C9.38071 12.5 10.5 11.3807 10.5 10ZM8 13.5C6.067 13.5 4.5 15.067 4.5 17H11.5C11.5 15.067 9.933 13.5 8 13.5Z"
+                            ></path></svg
+                        >
                     </div>
                     <div class="login-links">
                         <div class="login-button">
-                            <Button class="w-[280px]" on:click={() => location.href="/auth/google"}>
+                            <Button
+                                class="w-[280px]"
+                                on:click={() =>
+                                    (location.href = "/auth/google")}
+                            >
                                 <BrandGoogle />
                                 　Login with Google
                             </Button>
                         </div>
                         <div class="input-elm">
-                            <Button class="w-[280px]" on:click={() => location.href="/auth/azuread"}>
+                            <Button
+                                class="w-[280px]"
+                                on:click={() =>
+                                    (location.href = "/auth/azuread")}
+                            >
                                 <BrandAzure />
                                 　Login with Microsoft Entra ID
                             </Button>
@@ -39,19 +69,24 @@
                 <AddGalleryButton />
             </div>
 
-            <a href="/galleries/1" class="w-[150px]">
-                <div class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl">
-                    <img
-                            class="gallery-box h-[150px] aspect-auto object-cover"
-                            src="https://s3.sda1.net/nnm/contents/5c384023-8a07-4968-9328-c0b89ada05d7.jpg"
-                            alt=""
-                    />
-                </div>
-                <p class="w-[150px] mt-2 truncate">Honkai: StarRail Screenshots</p>
-            </a>
+            {#if !isLoading}
+                {#each galleries as gallery}
+                    <a href="/galleries/{gallery.id}" class="w-[150px]">
+                        <div
+                            class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl"
+                        >
+                            <img
+                                class="gallery-box h-[150px] aspect-auto object-cover"
+                                src="https://s3.sda1.net/nnm/contents/5c384023-8a07-4968-9328-c0b89ada05d7.jpg"
+                                alt=""
+                            />
+                        </div>
+                        <p class="w-[150px] mt-2 truncate">{gallery.name}</p>
+                    </a>
+                {/each}
+            {/if}
         </div>
     {/if}
-
 </section>
 
 <style lang="scss">
