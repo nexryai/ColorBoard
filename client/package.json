@@ -39,6 +39,7 @@
 		"lucide-svelte": "^0.417.0",
 		"mode-watcher": "^0.4.0",
 		"nprogress": "^0.2.0",
+		"svelte-file-dropzone": "^2.0.7",
 		"svelte-infinite-scroll": "^2.0.1",
 		"svelte-sonner": "^0.3.27",
 		"tailwind-merge": "^2.4.0",
