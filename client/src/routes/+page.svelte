@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button"
+    import { Skeleton } from "$lib/components/ui/skeleton"
     import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
     import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
     import { isLoggedIn } from "$lib/account"
@@ -13,8 +14,8 @@
     console.log("Fetching galleries...")
     getMyGalleries()
         .then((res) => {
-            isLoading = false
             galleries = res
+            isLoading = false
         })
         .catch((error) => {
             console.error(error)
@@ -84,6 +85,8 @@
                         <p class="w-[150px] mt-2 truncate">{gallery.name}</p>
                     </a>
                 {/each}
+            {:else}
+                <Skeleton class="h-[150px] w-[250px] mt-8" />
             {/if}
         </div>
     {/if}
