@@ -1,4 +1,4 @@
-import init, { upload_file } from "../../static/wasm/cb_client_wasm"
+import init, { upload_file } from "$lib/wasm/cb_client_wasm"
 
 init().then(() => {
     console.log("initialized")

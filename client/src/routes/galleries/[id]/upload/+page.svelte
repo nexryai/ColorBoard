@@ -1,8 +1,6 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import type { PageData } from "../../../../../.svelte-kit/types/src/routes/galleries/[id]/$types";
-    import Dropzone from "svelte-file-dropzone";
-
+    import type { PageData } from "../../../../../.svelte-kit/types/src/routes/galleries/[id]/$types"
+    import Dropzone from "svelte-file-dropzone"
     import { createUploadReader } from "$lib/upload"
 
     export let data: PageData;
@@ -19,11 +17,10 @@
 
         console.log(uploadQueue);
         for (let i = 0; i < uploadQueue.length; i++) {
-            const reader = createUploadReader()
+            const reader = createUploadReader();
             console.log(reader.readAsArrayBuffer(acceptedFiles[i]));
         }
     }
-
 </script>
 
 <div>
