@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nexryai/ColorBoard/client"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -18,7 +17,6 @@ func serveFromClientFS(ctx *gin.Context, pathPrefix string) {
 	path := ctx.Param("filepath")
 	rawFile, err := clientDistFS.Open(clientDistPrefix + "/" + pathPrefix + path)
 	if err != nil {
-		log.Printf("failed to open file: %v", err)
 		ctx.Status(http.StatusNotFound)
 		return
 	}

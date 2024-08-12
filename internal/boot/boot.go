@@ -50,6 +50,7 @@ func Boot() {
 	router := gin.Default()
 	router.Use(middleware.AuthMiddleware(sessionStore))
 	server.ServeClient(router)
+	server.ServceLocalStorageFiles(router)
 
 	// Config the OAuth router
 	authController.ConfigOAuthRouter(router, userService, sessionStore)
