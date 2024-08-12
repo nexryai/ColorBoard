@@ -29,6 +29,6 @@ export function callApi<T>(method: string, url: string, data?: any): Promise<T> 
     })
 }
 
-export function getMyGalleries(): Promise<Gallery[]> {
+export function fetchMyGalleries(): Promise<Gallery[]> {
     return callApi<Gallery[]>("GET", "/api/gallery/list")
 }

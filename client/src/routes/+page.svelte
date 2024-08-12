@@ -6,13 +6,13 @@
     import AddGalleryButton from "$lib/components/AddGalleryButton.svelte";
 
     import { isLoggedIn } from "$lib/account";
-    import { type Gallery, getMyGalleries } from "$lib/api";
+    import { type Gallery, fetchMyGalleries } from "$lib/api";
 
     let isLoading = true;
     let galleries: Gallery[];
 
     console.log("Fetching galleries...");
-    getMyGalleries()
+    fetchMyGalleries()
         .then((res) => {
             galleries = res;
             isLoading = false;
