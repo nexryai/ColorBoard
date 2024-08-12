@@ -32,8 +32,8 @@ type (
 		AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurash string) (string, error)
 	}
 	IStorage interface {
-		CreateFile(reader io.Reader) (string, error)
-		GetFileUrl(id string) (string, error)
-		DeleteFile(id string) error
+		CreateFile(reader io.Reader, userId string) (string, error)
+		GetFileUrl(id string, userId string) (string, error)
+		DeleteFile(id string, userId string) error
 	}
 )

@@ -90,12 +90,12 @@ func (gs *GalleryService) AddImage(reader io.Reader, thumbReader io.Reader, user
 		defer prisma.Prisma.Disconnect()
 	}
 
-	fileId, err := gs.storage.CreateFile(reader)
+	fileId, err := gs.storage.CreateFile(reader, userId)
 	if err != nil {
 		return "", err
 	}
 
-	thumbnailId, err := gs.storage.CreateFile(thumbReader)
+	thumbnailId, err := gs.storage.CreateFile(thumbReader, userId)
 	if err != nil {
 		return "", err
 	}

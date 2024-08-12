@@ -1,20 +1,28 @@
 package storage
 
 import (
-    "fmt"
-    "github.com/google/uuid"
-    "io"
-    "os"
-    "path/filepath"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/google/uuid"
+)
+
+var (
+    ErrFileNotFound     = errors.New("file not found")
+    ErrPermissionDenied = errors.New("permission denied")
 )
 
 type LocalStorageService struct {
     dataDir string
 }
 
-func (l *LocalStorageService) CreateFile(reader io.Reader) (string, error) {
+func (l *LocalStorageService) CreateFile(reader io.Reader, userId string) (string, error) {
     // IDを生成
-    id := fmt.Sprintf("local:%s", uuid.New().String())
+    id := fmt.Sprintf("local:%s:%s", userId, uuid.New().String())
 
     // 保存するファイルパスを作成
     filePath := filepath.Join(l.dataDir, id)
@@ -35,19 +43,27 @@ func (l *LocalStorageService) CreateFile(reader io.Reader) (string, error) {
     return id, nil
 }
 
-func (l *LocalStorageService) GetFileUrl(id string) (string, error) {
+func (l *LocalStorageService) GetFileUrl(id string, userId string) (string, error) {
+    if strings.HasPrefix(id, fmt.Sprintf("local:%s:", userId)) {
+        return "", ErrPermissionDenied 
+    }
+    
     filePath := filepath.Join(l.dataDir, id)
 
     // ファイルが存在するか確認
     if _, err := os.Stat(filePath); os.IsNotExist(err) {
-        return "", fmt.Errorf("file not found")
+        return "", ErrFileNotFound
     }
 
     // ファイルパスを返す（ローカルのURL）
     return filePath, nil
 }
 
-func (l *LocalStorageService) DeleteFile(id string) error {
+func (l *LocalStorageService) DeleteFile(id string, userId string) error {
+    if strings.HasPrefix(id, fmt.Sprintf("local:%s:", userId)) {
+        return ErrPermissionDenied 
+    }
+    
     filePath := filepath.Join(l.dataDir, id)
 
     // ファイルを削除
