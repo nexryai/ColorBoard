@@ -137,6 +137,7 @@ dependencies = [
  "image",
  "uuid",
  "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]

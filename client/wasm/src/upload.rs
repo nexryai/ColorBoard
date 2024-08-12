@@ -30,6 +30,7 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
     // Get blurhash
     log("[ColorBoard WASM] Calculating blurhash...");
     let blurhash = get_blurhash(&thumbnail_data);
+    log(&format!("generated: {}", &blurhash));
     
     log("[ColorBoard WASM] Uploading lossless image");
 
