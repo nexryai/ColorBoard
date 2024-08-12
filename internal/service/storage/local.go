@@ -44,7 +44,7 @@ func (l *LocalStorageService) CreateFile(reader io.Reader, userId string) (strin
 }
 
 func (l *LocalStorageService) GetFileUrl(id string, userId string) (string, error) {
-    if strings.HasPrefix(id, fmt.Sprintf("local:%s:", userId)) {
+    if !strings.HasPrefix(id, fmt.Sprintf("local:%s:", userId)) {
         return "", ErrPermissionDenied 
     }
     
@@ -60,7 +60,7 @@ func (l *LocalStorageService) GetFileUrl(id string, userId string) (string, erro
 }
 
 func (l *LocalStorageService) DeleteFile(id string, userId string) error {
-    if strings.HasPrefix(id, fmt.Sprintf("local:%s:", userId)) {
+    if !strings.HasPrefix(id, fmt.Sprintf("local:%s:", userId)) {
         return ErrPermissionDenied 
     }
     
