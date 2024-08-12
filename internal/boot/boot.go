@@ -2,6 +2,7 @@ package boot
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
@@ -13,6 +14,7 @@ import (
 	"github.com/nexryai/ColorBoard/internal/server"
 	"github.com/nexryai/ColorBoard/internal/service/account"
 	"github.com/nexryai/ColorBoard/internal/service/gallery"
+	"github.com/nexryai/ColorBoard/internal/service/storage"
 )
 
 var (
@@ -34,8 +36,14 @@ func Boot() {
 
 	// Resolve dependencies
 	log.Info("Initializing services and resolving dependencies...")
+	storageService, err := storage.NewLocalStorageService()
+	if err != nil {
+		log.FatalWithDetail("Failed to initialize service: ", err)
+		os.Exit(1)
+	}
+
 	userService := account.NewUserServices()
-	galleryService := gallery.NewGalleryService()
+	galleryService := gallery.NewGalleryService(storageService)
 
 	// Boot the server
 	log.Info("Configuring routes...")
@@ -53,7 +61,7 @@ func Boot() {
 
 	// Start the server
 	log.Info("Starting server...")
-	err := router.Run(":8080")
+	err = router.Run(":8080")
 	if err != nil {
 		log.FatalWithDetail("Failed to start server", err)
 	}

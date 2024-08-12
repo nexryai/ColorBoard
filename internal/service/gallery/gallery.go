@@ -1,12 +1,16 @@
 package gallery
 
 import (
+	"io"
+
 	"github.com/nexryai/ColorBoard/db"
 	"github.com/nexryai/ColorBoard/internal/database"
 	"github.com/nexryai/ColorBoard/internal/service"
 )
 
-type GalleryService struct {}
+type GalleryService struct {
+	storage service.IStorage
+}
 
 func (gs *GalleryService) CreateGallery(gallery *service.GalleryCreateParam) (string, error) {
 	prisma, ctx, err := database.GetPrismaClient()
@@ -76,6 +80,43 @@ func (gs *GalleryService) GetGalleriesByUserId(userId string) (*[]db.GalleryMode
 	return &found, nil
 }
 
-func NewGalleryService() *GalleryService {
-	return &GalleryService{}
+func (gs *GalleryService) AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurhash string) (string, error) {
+	prisma, ctx, err := database.GetPrismaClient()
+	if err != nil {
+		return "", err
+	} else {
+		defer prisma.Prisma.Disconnect()
+	}
+
+	fileId, err := gs.storage.CreateFile(reader)
+	if err != nil {
+		return "", err
+	}
+
+	thumbnailId, err := gs.storage.CreateFile(thumbReader)
+	if err != nil {
+		return "", err
+	}
+
+	created, err := prisma.Image.CreateOne(
+		db.Image.StorageKey.Set(fileId),
+		db.Image.ThumbnailKey.Set(thumbnailId),
+		db.Image.Blurhash.Set(blurhash),
+		db.Image.User.Link(
+			db.User.ID.Equals(userId),
+		),
+		db.Image.Gallery.Link(
+			db.Gallery.ID.Equals(galleryId),
+		),
+	).Exec(ctx)
+
+	if err != nil {
+		return "", err
+	}
+
+	return created.ID, nil
+}
+
+func NewGalleryService(storage service.IStorage) *GalleryService {
+	return &GalleryService{storage: storage}
 }

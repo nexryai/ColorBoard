@@ -29,11 +29,11 @@ type (
 		CreateGallery(gallery *GalleryCreateParam) (string, error)
 		GetGallery(userId string, id string) (*db.GalleryModel, error)
 		GetGalleriesByUserId(userId string) (*[]db.GalleryModel, error)
-		/*AddImage(reader io.Reader, gallery *db.GalleryModel) (string, error)*/
+		AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurash string) (string, error)
 	}
-	IStorageService interface {
+	IStorage interface {
 		CreateFile(reader io.Reader) (string, error)
-		GetFileUrl(param db.ImageEqualsUniqueWhereParam) (string, error)
-		DeleteFile(param db.ImageEqualsUniqueWhereParam) error
+		GetFileUrl(id string) (string, error)
+		DeleteFile(id string) error
 	}
 )
