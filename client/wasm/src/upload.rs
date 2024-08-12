@@ -40,14 +40,14 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
             .add_text("blurhash", &blurhash)
             .add_stream(
                 &mut Cursor::new(&lossless_data),
-                &filename,
+                "lossless_data",
                 Some(&filename),
                 None,
             )
             .unwrap()
             .add_stream(
                 &mut Cursor::new(&thumbnail_data),
-                &thumbnail_filename,
+                "thumbnail_data",
                 Some(&thumbnail_filename),
                 None,
             )
