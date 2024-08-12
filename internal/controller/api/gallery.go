@@ -70,7 +70,7 @@ func handleListGalleriesAPI(ctx *gin.Context, galleryService service.IGallerySer
     ctx.JSON(200, galleries)
 }
 
-func uploadHandler(ctx *gin.Context, galleryService service.IGalleryService) {
+func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGalleryService) {
     userId := ctx.MustGet("userId").(string)
 	galleryId := ctx.Param("id")
 	if galleryId == "" {
@@ -122,6 +122,6 @@ func ConfigGalleryAPIRouter(router *gin.Engine, galleryService service.IGalleryS
     })
 
 	router.POST("/api/gallery/:id/upload", func(ctx *gin.Context) {
-		uploadHandler(ctx, galleryService)
+		handleGalleryUploadAPI(ctx, galleryService)
 	})
 }
