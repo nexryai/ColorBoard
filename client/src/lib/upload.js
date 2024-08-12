@@ -4,13 +4,16 @@ init().then(() => {
     console.log("initialized")
 })
 
-export function createUploadReader() {
+/**
+ * @param {string} galleryId
+ */
+export function createUploadReader(galleryId) {
     const reader = new FileReader()
 
     reader.onload = (e) => {
         globalThis.isUploading = true
         // @ts-ignore
-        const uploadRes = upload_file("f", new Uint8Array(reader.result))
+        const uploadRes = upload_file(galleryId, new Uint8Array(reader.result))
         console.log(uploadRes)
     }
 

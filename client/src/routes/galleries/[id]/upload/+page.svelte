@@ -17,7 +17,7 @@
 
         console.log(uploadQueue);
         for (let i = 0; i < uploadQueue.length; i++) {
-            const reader = createUploadReader();
+            const reader = createUploadReader(galleryId);
             console.log(reader.readAsArrayBuffer(acceptedFiles[i]));
         }
     }

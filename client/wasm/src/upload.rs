@@ -16,8 +16,9 @@ extern "C" {
 #[wasm_bindgen]
 pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
     // Encode lossless image
-    log("[ColorBoard WASM] Encoding lossless WebP");
-    let lossless_data = encode_to_webp_lossless(&data);
+    // 一部の画像でサイズが異常に膨れ上がるので保留
+    // log("[ColorBoard WASM] Encoding lossless WebP");
+    // let lossless_data = encode_to_webp_lossless(&data);
     
     // Encode thumbnail
     log("[ColorBoard WASM] Encoding thumbnail WebP");
@@ -39,7 +40,7 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
         MultipartBuilder::new()
             .add_text("blurhash", &blurhash)
             .add_stream(
-                &mut Cursor::new(&lossless_data),
+                &mut Cursor::new(&data),
                 "lossless_data",
                 Some(&filename),
                 None,
