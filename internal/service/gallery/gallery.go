@@ -49,6 +49,8 @@ func (gs *GalleryService) GetGallery(userId string, id string) (*db.GalleryModel
 			db.Gallery.ID.Equals(id),
 			db.Gallery.UserID.Equals(userId),
 		),
+	).With(
+		db.Gallery.Images.Fetch().Take(25),
 	).Exec(ctx)
 
 	if err != nil {
