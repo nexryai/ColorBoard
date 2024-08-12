@@ -24,7 +24,6 @@ pub fn init() {
 pub fn render_blurhash(element_id: String, hash: String) {
     //let hash: String = "LuNIK4?DI;aL~9o{NHwMt7Seofay".to_string();
     let pix = decode_blurhash(&hash);
-    log(&format!("[DEBUG] decode blurhash: {:?}", pix));
 
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document.get_element_by_id(&element_id).unwrap();
@@ -63,7 +62,7 @@ pub fn render_blurhash(element_id: String, hash: String) {
     offscreen_context.put_image_data(&data, 0.0, 0.0).unwrap();
 
     // オフスクリーンキャンバスからメインキャンバスに拡大して描画
-    context.clear_rect(0.0, 0.0, 150.0, 150.0); // メインキャンバスをクリア
+    // context.clear_rect(0.0, 0.0, 150.0, 150.0); // メインキャンバスをクリア
     context.draw_image_with_html_canvas_element_and_dw_and_dh(
         &offscreen_canvas,
         0.0,
