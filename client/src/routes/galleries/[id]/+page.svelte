@@ -4,10 +4,14 @@
     import init, { render_blurhash } from "$lib/wasm/cb_client_wasm"
     import { fetchGallery } from "$lib/api"
     import { Button } from "$lib/components/ui/button"
+    import { Skeleton } from "$lib/components/ui/skeleton"
     import CloudUpload from "@tabler/icons-svelte/icons/cloud-upload"
 
     import PhotoSwipeLightbox from "photoswipe/lightbox"
     import "photoswipe/style.css"
+
+    let isLoading = true
+    let galleryName = "loading..."
 
     export let data: PageData
     const galleryId = data.id
@@ -34,7 +38,10 @@
                 init(),
                 fetchGallery(galleryId),
             ])
+
+            galleryName = gallery.name
             console.log("initialized")
+            isLoading = false
 
             if (gallery && gallery.images.length > 0) {
                 for (let i = 0; i < gallery.images.length; i++) {
@@ -102,8 +109,14 @@
 </script>
 
 <div>
+    {#if isLoading}
+        <div class="skeleton space-y-2 mt-12">
+            <Skeleton class="h-4 w-[250px]" />
+            <Skeleton class="h-4 w-[200px]" />
+        </div>
+    {:else}
     <div class="flex justify-between items-center mb-8">
-        <p class="text-2xl">Galleries</p>
+        <p class="text-2xl">{galleryName}</p>
         <Button variant="outline" href="/galleries/{galleryId}/upload">
             <CloudUpload class="mr-2" />
             Upload
@@ -135,4 +148,5 @@
             </div>
         {/each}
     </div>
+    {/if}
 </div>
