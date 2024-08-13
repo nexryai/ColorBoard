@@ -1,10 +1,13 @@
 <script lang="ts">
-    import { afterUpdate } from "svelte"
+    import { afterUpdate, onMount } from "svelte"
     import type { PageData } from "../../../../.svelte-kit/types/src/routes/galleries/[id]/$types"
     import init, { render_blurhash } from "$lib/wasm/cb_client_wasm"
     import { fetchGallery } from "$lib/api"
     import { Button } from "$lib/components/ui/button"
     import CloudUpload from "@tabler/icons-svelte/icons/cloud-upload"
+
+    import PhotoSwipeLightbox from "photoswipe/lightbox"
+    import "photoswipe/style.css"
 
     export let data: PageData
     const galleryId = data.id
@@ -18,6 +21,8 @@
         imageUrl:     string
         // サムネイルが読み込まれたか
         loaded:       boolean
+        width?:       number
+        height?:      number
     }
 
     let placeholdersAreReady = false
@@ -57,9 +62,18 @@
     }
 
     function handleImageLoad(index: number) {
+        const img = event?.target as HTMLImageElement
+        const width = img.naturalWidth
+        const height = img.naturalHeight
+
         placeholders = placeholders.map((placeholder, i) => {
             if (i === index) {
-                return { ...placeholder, loaded: true }
+                return { 
+                    ...placeholder, 
+                    loaded: true,
+                    width,
+                    height
+                }
             }
             return placeholder
         })
@@ -69,14 +83,23 @@
         // placeholdersAreReadyがtrueになった後に実行される
         if (placeholdersAreReady) {
             placeholders = placeholders.map(placeholder => {
-                if (!placeholder.rendered) {
+                if (!placeholder.rendered && !placeholder.loaded) {
                     console.log("Rendering blurhash...")
-                    render_blurhash(placeholder.elementId, placeholder.blurhash);
-                    return { ...placeholder, rendered: true };
+                    render_blurhash(placeholder.elementId, placeholder.blurhash)
+                    return { ...placeholder, rendered: true }
                 }
-                return placeholder;
-            });
+                return placeholder
+            })
         }
+    })
+
+    onMount(() => {
+        let lightbox = new PhotoSwipeLightbox({
+            gallery: '#' + galleryId,
+            children: 'a',
+            pswpModule: () => import("photoswipe"),
+        })
+        lightbox.init()
     })
 
     initAndFetch()
@@ -90,7 +113,7 @@
             Upload
         </Button>
     </div>
-    <div class="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%]" class:hidden={!placeholdersAreReady}>
+    <div id={galleryId} class="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery" class:hidden={!placeholdersAreReady}>
         {#each placeholders as placeholder, index}
             <div class="w-[150px] h-[150px] overflow-hidden">
                 <canvas
@@ -98,12 +121,20 @@
                     class="w-[300px] h-[150px]"
                     class:hidden={placeholder.loaded}
                 />
-                <img 
-                    src={placeholder.thumbnailUrl} 
-                    on:load={() => handleImageLoad(index)}
-                    class:hidden={!placeholder.loaded}
-                    alt=""
-                />
+                <a
+                    href={placeholder.imageUrl}
+                    data-pswp-width={placeholder.width || 0}
+                    data-pswp-height={placeholder.height || 0}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    <img 
+                        src={placeholder.thumbnailUrl} 
+                        on:load={() => handleImageLoad(index)}
+                        class:hidden={!placeholder.loaded}
+                        alt=""
+                    />
+                </a>
             </div>
         {/each}
     </div>

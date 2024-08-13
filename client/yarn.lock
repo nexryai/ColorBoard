@@ -474,6 +474,11 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.5.tgz"
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
 
+"@types/photoswipe@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@types/photoswipe/-/photoswipe-4.1.6.tgz#41d1e0a54c1b27628688e8abf9b95baab472a247"
+  integrity sha512-6kN4KYjNF4sg79fSwZ46s4Pron4+YJxoW0DQOcHveUZc/3cWd8Q4B9OLlDmEYw9iI6fODU8kyyq8ZBy+8F/+zQ==
+
 "@types/pug@^2.0.6":
   version "2.0.10"
   resolved "https://registry.npmjs.org/@types/pug/-/pug-2.0.10.tgz"
@@ -1710,6 +1715,11 @@ periscopic@^3.1.0:
     "@types/estree" "^1.0.0"
     estree-walker "^3.0.0"
     is-reference "^3.0.0"
+
+photoswipe@^5.4.4:
+  version "5.4.4"
+  resolved "https://registry.yarnpkg.com/photoswipe/-/photoswipe-5.4.4.tgz#e045dc036453493188d5c8665b0e8f1000ac4d6e"
+  integrity sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==
 
 picocolors@^1.0.0, picocolors@^1.0.1:
   version "1.0.1"
