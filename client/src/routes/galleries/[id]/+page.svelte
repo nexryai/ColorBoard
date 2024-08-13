@@ -111,7 +111,7 @@
     </div>
     <div id={galleryId} class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery" class:hidden={!placeholdersAreReady}>
         {#each placeholders as placeholder, index}
-            <div class="w-[150px] h-[150px] overflow-hidden">
+            <div class="w-[150px] h-[150px] overflow-hidden border border-slate-200 transition hover:shadow-md">
                 <canvas
                     id={placeholder.elementId}
                     class="w-[300px] h-[150px]"
