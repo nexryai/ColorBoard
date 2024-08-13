@@ -34,8 +34,6 @@
                         blurhash: image.blurhash,
                         rendered: false
                     }]
-                    console.log(image.blurhash)
-                    //render_blurhash(`ph-canvas-${i}`, image.blurhash)
                 }
             }
 
