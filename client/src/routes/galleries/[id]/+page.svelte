@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { afterUpdate, onMount } from "svelte"
+    import { afterUpdate } from "svelte"
     import type { PageData } from "../../../../.svelte-kit/types/src/routes/galleries/[id]/$types"
     import init, { render_blurhash } from "$lib/wasm/cb_client_wasm"
     import { fetchGallery } from "$lib/api"
@@ -31,9 +31,13 @@
 
     let placeholdersAreReady = false
     let placeholders: Placeholder[] = []
+    let photoswipeIsReady = false
+    let loadedThumbnails = 0
+    let allThumbinasAreLoaded = false
 
     async function initAndFetch() {
         try {
+            // WASMの初期化とギャラリー情報の取得を行う
             const [_, gallery] = await Promise.all([
                 init(),
                 fetchGallery(galleryId),
@@ -70,7 +74,9 @@
         }
     }
 
+    // 各サムネイル画像のロードが完了したら呼び出される
     function handleImageLoad(index: number) {
+        // blurhashのプレースホルダーからサムネイルに表示を切り替えるために、該当画像のloadedフラグをtrueにする
         placeholders = placeholders.map((placeholder, i) => {
             if (i === index) {
                 return {
@@ -80,29 +86,43 @@
             }
             return placeholder
         })
+
+        // インクリメント
+        loadedThumbnails++
+
+        // 全てのサムネイルが完了した場合、フラグを更新して再レンダリングされてもblurhash関係の処理をしないようにする
+        if (loadedThumbnails == placeholders.length) {
+            console.log("All thumnails are ready!")
+            allThumbinasAreLoaded = true
+        }
     }
 
     afterUpdate(() => {
-        // placeholdersAreReadyがtrueになった後に実行される
-        if (placeholdersAreReady) {
+        // サムネイルの読み込みが完了していない場合
+        if (!allThumbinasAreLoaded) {
             placeholders = placeholders.map(placeholder => {
+                // blurhashがレンダリングされてない&&サムネイルがロードされてないプレースホルダーを炙り出す
                 if (!placeholder.rendered && !placeholder.loaded) {
                     console.log("Rendering blurhash...")
+                    // Blurhashをレンダリング
                     render_blurhash(placeholder.elementId, placeholder.blurhash)
+                    // フラグ更新
                     return { ...placeholder, rendered: true }
                 }
                 return placeholder
             })
         }
-    })
 
-    onMount(() => {
-        let lightbox = new PhotoSwipeLightbox({
-            gallery: '#' + galleryId,
-            children: 'a',
-            pswpModule: () => import("photoswipe"),
-        })
-        lightbox.init()
+        if (!photoswipeIsReady && !isLoading) {
+            // 画像要素がレンダリングされた後、PhotoSwipeが初期化されてないなら初期化する
+            let lightbox = new PhotoSwipeLightbox({
+                gallery: '#' + galleryId,
+                children: 'a',
+                pswpModule: () => import("photoswipe"),
+            })
+            lightbox.init()
+            photoswipeIsReady = true
+        }
     })
 
     initAndFetch()
