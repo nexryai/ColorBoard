@@ -40,4 +40,6 @@ model Image {
 	user          User           @relation(fields: [userId], references: [id])
 	galleryId     String
 	gallery       Gallery        @relation(fields: [galleryId], references: [id])
+	width         Int
+	height        Int
 }

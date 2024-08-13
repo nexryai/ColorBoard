@@ -29,7 +29,7 @@ type (
 		CreateGallery(gallery *GalleryCreateParam) (string, error)
 		GetGallery(userId string, id string) (*db.GalleryModel, error)
 		GetGalleriesByUserId(userId string) (*[]db.GalleryModel, error)
-		AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurash string) (string, error)
+		AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurash string, w int, h int) (string, error)
 	}
 	IStorage interface {
 		CreateFile(reader io.Reader, userId string) (string, error)

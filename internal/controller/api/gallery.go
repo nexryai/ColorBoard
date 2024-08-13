@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nexryai/ColorBoard/internal/service"
@@ -80,7 +81,17 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 	
 	// blurhashフィールドの取得
     blurhash := ctx.PostForm("blurhash")
-    fmt.Println("Blurhash:", blurhash)
+    width, err := strconv.Atoi(ctx.PostForm("width"))
+    if err!= nil {
+		ctx.String(http.StatusBadRequest, "invalid width")
+        return
+	}
+
+    height, err := strconv.Atoi(ctx.PostForm("height"))
+    if err!= nil {
+		ctx.String(http.StatusBadRequest, "invalid height")
+        return
+	}
 
     // lossless_dataファイルの処理
     losslessFile, _, err := ctx.Request.FormFile("lossless_data")
@@ -99,7 +110,16 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
     defer thumbnailFile.Close()
 
 	// Add image to gallery
-	res, err := galleryService.AddImage(losslessFile, thumbnailFile, userId, galleryId, blurhash)
+	res, err := galleryService.AddImage(
+        losslessFile, 
+        thumbnailFile, 
+        userId, 
+        galleryId, 
+        blurhash,
+        width,
+        height,
+    )
+
 	if err != nil {
         ctx.String(http.StatusBadRequest, fmt.Sprintf("Error: %s", err.Error()))
         return

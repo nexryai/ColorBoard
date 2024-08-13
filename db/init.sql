@@ -19,6 +19,8 @@ CREATE TABLE "Image" (
     "updatedAt" DATETIME NOT NULL,
     "userId" TEXT NOT NULL,
     "galleryId" TEXT NOT NULL,
+    "width" INTEGER NOT NULL,
+    "height" INTEGER NOT NULL,
     FOREIGN KEY ("galleryId") REFERENCES "Gallery" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

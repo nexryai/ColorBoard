@@ -82,7 +82,7 @@ func (gs *GalleryService) GetGalleriesByUserId(userId string) (*[]db.GalleryMode
 	return &found, nil
 }
 
-func (gs *GalleryService) AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurhash string) (string, error) {
+func (gs *GalleryService) AddImage(reader io.Reader, thumbReader io.Reader, userId string, galleryId string, blurhash string, w int, h int) (string, error) {
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return "", err
@@ -110,6 +110,8 @@ func (gs *GalleryService) AddImage(reader io.Reader, thumbReader io.Reader, user
 		db.Image.Gallery.Link(
 			db.Gallery.ID.Equals(galleryId),
 		),
+		db.Image.Width.Set(w),
+		db.Image.Height.Set(h),
 	).Exec(ctx)
 
 	if err != nil {
