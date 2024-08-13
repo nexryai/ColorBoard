@@ -68,7 +68,7 @@
 <div>
     <div class="flex justify-between items-center mb-8">
         <p class="text-2xl">Galleries</p>
-        <Button variant="outline">
+        <Button variant="outline" href="/galleries/{galleryId}/upload">
             <CloudUpload class="mr-2" />
             Upload
         </Button>
