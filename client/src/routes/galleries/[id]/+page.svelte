@@ -10,9 +10,14 @@
     const galleryId = data.id
 
     interface Placeholder {
-        elementId: string
-        blurhash:  string
-        rendered: boolean
+        elementId:    string
+        blurhash:     string
+        // Blurhashが描画されたか
+        rendered:     boolean
+        thumbnailUrl: string
+        imageUrl:     string
+        // サムネイルが読み込まれたか
+        loaded:       boolean
     }
 
     let placeholdersAreReady = false
@@ -33,7 +38,10 @@
                     placeholders = [...placeholders, {
                         elementId: `ph-canvas-${i}`,
                         blurhash: image.blurhash,
-                        rendered: false
+                        rendered: false,
+                        thumbnailUrl: `/api/files/${image.thumbnailKey}`,
+                        imageUrl: `/api/files/${image.storageKey}`,
+                        loaded: false
                     }]
                 }
             }
@@ -46,6 +54,15 @@
         } catch (error) {
             console.error("An error occurred:", error)
         }
+    }
+
+    function handleImageLoad(index: number) {
+        placeholders = placeholders.map((placeholder, i) => {
+            if (i === index) {
+                return { ...placeholder, loaded: true }
+            }
+            return placeholder
+        })
     }
 
     afterUpdate(() => {
@@ -74,11 +91,18 @@
         </Button>
     </div>
     <div class="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%]" class:hidden={!placeholdersAreReady}>
-        {#each placeholders as placeholder}
+        {#each placeholders as placeholder, index}
             <div class="w-[150px] h-[150px] overflow-hidden">
                 <canvas
                     id={placeholder.elementId}
                     class="w-[300px] h-[150px]"
+                    class:hidden={placeholder.loaded}
+                />
+                <img 
+                    src={placeholder.thumbnailUrl} 
+                    on:load={() => handleImageLoad(index)}
+                    class:hidden={!placeholder.loaded}
+                    alt=""
                 />
             </div>
         {/each}
