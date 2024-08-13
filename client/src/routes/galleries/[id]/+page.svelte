@@ -109,7 +109,7 @@
             Upload
         </Button>
     </div>
-    <div id={galleryId} class="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery" class:hidden={!placeholdersAreReady}>
+    <div id={galleryId} class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery" class:hidden={!placeholdersAreReady}>
         {#each placeholders as placeholder, index}
             <div class="w-[150px] h-[150px] overflow-hidden">
                 <canvas
@@ -125,6 +125,7 @@
                     rel="noreferrer"
                 >
                     <img 
+                        class="h-[150px] aspect-auto object-cover"
                         src={placeholder.thumbnailUrl} 
                         on:load={() => handleImageLoad(index)}
                         class:hidden={!placeholder.loaded}

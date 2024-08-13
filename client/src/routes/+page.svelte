@@ -71,7 +71,7 @@
             </div>
 
             {#if !isLoading}
-                <div class="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+                <div class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
                     {#each galleries as gallery}
                         <a href="/galleries/{gallery.id}" class="w-[150px]">
                             <div
