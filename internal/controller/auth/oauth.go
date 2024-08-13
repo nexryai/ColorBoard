@@ -77,7 +77,7 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 		user, err := gothic.CompleteUserAuth(ctx.Writer, ctx.Request)
 		if err != nil {
 			log.ErrorWithDetail("failed to complete user auth", err)
-			ctx.Status(http.StatusInternalServerError)
+			ctx.Status(http.StatusBadRequest)
 			return
 		}
 
