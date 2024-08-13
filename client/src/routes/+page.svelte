@@ -1,4 +1,5 @@
 <script lang="ts">
+    import defaultThumbnail from "$lib/images/default-thumbnail.avif"
     import { Button } from "$lib/components/ui/button";
     import { Skeleton } from "$lib/components/ui/skeleton";
     import BrandGoogle from "@tabler/icons-svelte/icons/brand-google";
@@ -6,10 +7,18 @@
     import AddGalleryButton from "$lib/components/AddGalleryButton.svelte";
 
     import { isLoggedIn } from "$lib/account";
-    import { type Gallery, fetchMyGalleries } from "$lib/api";
+    import { type Gallery, type Image, fetchMyGalleries } from "$lib/api";
 
     let isLoading = true;
     let galleries: Gallery[];
+
+    function getImageSrc(images?: Image[]) {
+        if (!images || images.length === 0) {
+            return defaultThumbnail
+        } else {
+            return `/api/files/${images[0].thumbnailKey}`
+        }
+    }
 
     console.log("Fetching galleries...");
     fetchMyGalleries()
@@ -79,7 +88,7 @@
                             >
                                 <img
                                     class="gallery-box h-[150px] aspect-auto object-cover"
-                                    src="https://s3.sda1.net/nnm/contents/5c384023-8a07-4968-9328-c0b89ada05d7.jpg"
+                                    src={getImageSrc(gallery.images)}
                                     alt=""
                                 />
                             </div>
