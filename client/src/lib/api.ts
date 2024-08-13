@@ -9,6 +9,8 @@ export interface Image {
     updatedAt: string
     userId: string
     galleryId: string
+    width: number
+    height: number
 }
 
 export interface Gallery {

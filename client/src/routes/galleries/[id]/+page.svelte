@@ -21,8 +21,8 @@
         imageUrl:     string
         // サムネイルが読み込まれたか
         loaded:       boolean
-        width?:       number
-        height?:      number
+        width:       number
+        height:      number
     }
 
     let placeholdersAreReady = false
@@ -46,7 +46,9 @@
                         rendered: false,
                         thumbnailUrl: `/api/files/${image.thumbnailKey}`,
                         imageUrl: `/api/files/${image.storageKey}`,
-                        loaded: false
+                        loaded: false,
+                        width: image.width,
+                        height: image.height
                     }]
                 }
             }
@@ -62,17 +64,11 @@
     }
 
     function handleImageLoad(index: number) {
-        const img = event?.target as HTMLImageElement
-        const width = img.naturalWidth
-        const height = img.naturalHeight
-
         placeholders = placeholders.map((placeholder, i) => {
             if (i === index) {
-                return { 
+                return {
                     ...placeholder, 
-                    loaded: true,
-                    width,
-                    height
+                    loaded: true
                 }
             }
             return placeholder
@@ -123,8 +119,8 @@
                 />
                 <a
                     href={placeholder.imageUrl}
-                    data-pswp-width={placeholder.width || 0}
-                    data-pswp-height={placeholder.height || 0}
+                    data-pswp-width={placeholder.width}
+                    data-pswp-height={placeholder.height}
                     target="_blank"
                     rel="noreferrer"
                 >
