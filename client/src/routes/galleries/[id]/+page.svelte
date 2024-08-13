@@ -24,7 +24,6 @@
             ])
             console.log("initialized")
 
-            const startTime = Date.now()
             if (gallery && gallery.images.length > 0) {
                 for (let i = 0; i < gallery.images.length; i++) {
                     const image = gallery.images[i]
@@ -38,9 +37,6 @@
             }
 
             placeholdersAreReady = true
-
-            const endTime = Date.now()
-            console.log(endTime - startTime)
 
             if (gallery) {
                 console.log(gallery)
