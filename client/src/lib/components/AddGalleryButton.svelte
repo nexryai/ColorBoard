@@ -66,8 +66,8 @@
     <Dialog.Root bind:open>
         <Dialog.Trigger>
             <Button variant="outline">
-                <IconPlus />
-                　Add
+                <IconPlus class="mr-2" />
+                Add
             </Button>
         </Dialog.Trigger>
 
