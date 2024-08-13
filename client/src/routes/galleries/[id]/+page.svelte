@@ -158,7 +158,7 @@
                     rel="noreferrer"
                 >
                     <img 
-                        class="h-[150px] aspect-auto object-cover"
+                        class="w-[150px] h-[150px] aspect-auto object-cover"
                         src={placeholder.thumbnailUrl} 
                         on:load={() => handleImageLoad(index)}
                         class:hidden={!placeholder.loaded}
