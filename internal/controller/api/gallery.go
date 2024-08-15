@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"fmt"
 	"io"
@@ -117,10 +118,22 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 
     // ファイルの整合性確認
     hasher := sha256.New()
-    teeReader := io.TeeReader(losslessFile, hasher)
+    fileBuffer, err := io.ReadAll(losslessFile)
+    if err != nil {
+        ctx.String(http.StatusBadRequest, fmt.Sprintf("Error reading file data: %s", err.Error()))
+        return
+    }
+
+    _, err = hasher.Write(fileBuffer)
+    if err != nil {
+        ctx.String(http.StatusInternalServerError, fmt.Sprintf("Error hashing file data: %s", err.Error()))
+        return
+    }
+
+    // ハッシュ_認
     sha256Hash := fmt.Sprintf("%x", hasher.Sum(nil))
     if sha256Hash != expectedChecksum {
-        ctx.String(http.StatusBadRequest, fmt.Sprintf("checksum mismatch (received != calculated): %s != %s", sha256Hash, expectedChecksum))
+        ctx.String(http.StatusBadRequest, fmt.Sprintf("checksum mismatch (calculated != received): %s != %s", sha256Hash, expectedChecksum))
         return
     }
 
@@ -134,7 +147,7 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 
 	// Add image to gallery
 	res, err := galleryService.AddImage(
-        teeReader, 
+        bytes.NewReader(fileBuffer), 
         sha256Hash,
         thumbnailFile, 
         userId, 
