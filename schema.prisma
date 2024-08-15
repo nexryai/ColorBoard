@@ -32,6 +32,7 @@ model Gallery {
 model Image {
 	id            String         @id @default(cuid())
 	storageKey    String         @unique
+	sha256Hash    String
 	thumbnailKey  String         @unique
 	blurhash      String
 	createdAt     DateTime       @default(now())
@@ -42,4 +43,5 @@ model Image {
 	gallery       Gallery        @relation(fields: [galleryId], references: [id])
 	width         Int
 	height        Int
+	@@unique([userId, sha256Hash])
 }

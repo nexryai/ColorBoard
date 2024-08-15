@@ -13,6 +13,7 @@ CREATE TABLE "Gallery" (
 CREATE TABLE "Image" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "storageKey" TEXT NOT NULL,
+    "sha256Hash" TEXT NOT NULL,
     "thumbnailKey" TEXT NOT NULL,
     "blurhash" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -34,6 +35,9 @@ CREATE TABLE "User" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Image_userId_sha256Hash_key" ON "Image"("userId" ASC, "sha256Hash" ASC);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Image_thumbnailKey_key" ON "Image"("thumbnailKey" ASC);
