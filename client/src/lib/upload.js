@@ -10,11 +10,11 @@ init().then(() => {
 export function createUploadReader(galleryId) {
     const reader = new FileReader()
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
         globalThis.isUploading = true
         // @ts-ignore
-        const uploadRes = upload_file(galleryId, new Uint8Array(reader.result))
-        console.log(uploadRes)
+        const uploadRes = await upload_file(galleryId, new Uint8Array(reader.result))
+        console.log(`Upload resp: ${uploadRes}`)
     }
 
     return reader

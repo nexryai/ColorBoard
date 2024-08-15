@@ -1,7 +1,10 @@
+use std::sync::{Arc, Mutex};
 use std::io::Cursor;
 use image::GenericImageView;
 use uuid::Uuid;
 use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen_futures;
+use oneshot;
 
 use ehttp::multipart::MultipartBuilder;
 
@@ -15,7 +18,7 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
+pub async fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
     // Get checksum
     let sha256_hash = hash_vec_to_string(&data);
     
@@ -66,8 +69,9 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
 
     log("[ColorBoard WASM] Uploading...");
 
-    let status_code = std::sync::Arc::new(std::sync::Mutex::new(0));  // 共有可能な変数を作成
-    let status_code_clone = std::sync::Arc::clone(&status_code);  // クローンを作成
+    let (tx, rx) = oneshot::channel();
+    let status_code = Arc::new(Mutex::new(0));
+    let status_code_clone = Arc::clone(&status_code);
 
     ehttp::fetch(request, move |response| {
         let mut status = status_code_clone.lock().unwrap();
@@ -75,13 +79,15 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
             Ok(response) => *status = response.status,
             Err(e) => {
                 log(&format!("[Error] Failed to create multipart request: {}", e));
-                *status = 0;
-            }// エラーが発生した場合は0を設定
+                *status = 1;
+            }
         }
+        tx.send(()).unwrap();
         log("[ColorBoard WASM] Done");
     });
 
-    let status = *status_code.lock().unwrap();  // ロックして値を取得
+    rx.await.unwrap();
+    let status = *status_code.lock().unwrap();
 
     status
 }
