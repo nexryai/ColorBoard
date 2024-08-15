@@ -1,7 +1,9 @@
 package api
 
 import (
+	"crypto/sha256"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -78,28 +80,49 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 		ctx.String(http.StatusBadRequest, "invalid request")
         return
 	}
+
+    // チェックサム
+    expectedChecksum := ctx.PostForm("sha256Hash")
+    if expectedChecksum == "" {
+        ctx.String(http.StatusBadRequest, "invalid sha256Hash")
+        return
+    }
 	
 	// blurhashフィールドの取得
     blurhash := ctx.PostForm("blurhash")
+    if blurhash == "" {
+        ctx.String(http.StatusBadRequest, "invalid blurhash")
+        return
+    }
+
     width, err := strconv.Atoi(ctx.PostForm("width"))
-    if err!= nil {
+    if err != nil {
 		ctx.String(http.StatusBadRequest, "invalid width")
         return
 	}
 
     height, err := strconv.Atoi(ctx.PostForm("height"))
-    if err!= nil {
+    if err != nil {
 		ctx.String(http.StatusBadRequest, "invalid height")
         return
 	}
 
-    // lossless_dataファイルの処理
+    // オリジナルファイルのreaderを取得
     losslessFile, _, err := ctx.Request.FormFile("lossless_data")
     if err != nil {
         ctx.String(http.StatusBadRequest, fmt.Sprintf("Error reading lossless data: %s", err.Error()))
         return
     }
     defer losslessFile.Close()
+
+    // ファイルの整合性確認
+    hasher := sha256.New()
+    teeReader := io.TeeReader(losslessFile, hasher)
+    sha256Hash := fmt.Sprintf("%x", hasher.Sum(nil))
+    if sha256Hash != expectedChecksum {
+        ctx.String(http.StatusBadRequest, fmt.Sprintf("checksum mismatch (received != calculated): %s != %s", sha256Hash, expectedChecksum))
+        return
+    }
 
     // thumbnail_dataファイルの処理
     thumbnailFile, _, err := ctx.Request.FormFile("thumbnail_data")
@@ -111,7 +134,8 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 
 	// Add image to gallery
 	res, err := galleryService.AddImage(
-        losslessFile, 
+        teeReader, 
+        sha256Hash,
         thumbnailFile, 
         userId, 
         galleryId, 
