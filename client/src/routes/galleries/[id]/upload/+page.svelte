@@ -57,6 +57,11 @@
                         name: filename,
                         reason: "Failed to upload image."
                     }];
+                }else if (uploadRes == 409){
+                    failedFiles = [...failedFiles, {
+                        name: filename,
+                        reason: "The same file already exists."
+                    }];
                 } else {
                     failedFiles = [...failedFiles, {
                         name: filename,
@@ -77,7 +82,7 @@
         const { acceptedFiles, fileRejections } = e.detail;
         acceptedFiles.done = false
 
-        // Add ti queue
+        // Add to queue
         uploadQueue = [...acceptedFiles];
         failedFiles = [...failedFiles, ...fileRejections];
 

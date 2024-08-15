@@ -160,7 +160,7 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 
 	if err != nil {
         if _, e := db.IsErrUniqueConstraint(err); e {
-            ctx.String(http.StatusBadRequest, "A same file already exists")
+            ctx.String(http.StatusConflict, "A same file already exists")
             return
         }
 
