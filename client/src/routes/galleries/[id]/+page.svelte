@@ -1,5 +1,6 @@
 <script lang="ts">
     import { afterUpdate } from "svelte"
+    import { blur } from "svelte/transition"
     import type { PageData } from "../../../../.svelte-kit/types/src/routes/galleries/[id]/$types"
     import init, { render_blurhash } from "$lib/wasm/cb_client_wasm"
     import { fetchGallery } from "$lib/api"
@@ -142,7 +143,7 @@
             Upload
         </Button>
     </div>
-    <div id={galleryId} class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery" class:hidden={!placeholdersAreReady}>
+    <div id={galleryId} class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery" class:hidden={!placeholdersAreReady} in:blur>
         {#each placeholders as placeholder, index}
             <div class="w-[150px] h-[150px] overflow-hidden border border-slate-200 transition hover:shadow-md">
                 <canvas
