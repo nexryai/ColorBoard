@@ -130,7 +130,7 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
         return
     }
 
-    // ハッシュ_認
+    // ハッシュ確認
     sha256Hash := fmt.Sprintf("%x", hasher.Sum(nil))
     if sha256Hash != expectedChecksum {
         ctx.String(http.StatusBadRequest, fmt.Sprintf("checksum mismatch (calculated != received): %s != %s", sha256Hash, expectedChecksum))
