@@ -82,9 +82,9 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
 	}
 
     // チェックサム
-    expectedChecksum := ctx.PostForm("sha256Hash")
+    expectedChecksum := ctx.PostForm("sha256")
     if expectedChecksum == "" {
-        ctx.String(http.StatusBadRequest, "invalid sha256Hash")
+        ctx.String(http.StatusBadRequest, "invalid hash value")
         return
     }
 	

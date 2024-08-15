@@ -5,7 +5,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 use ehttp::multipart::MultipartBuilder;
 
-use crate::{blurhash::get_blurhash, thumb::generate_thumbnail};
+use crate::{blurhash::get_blurhash, thumb::generate_thumbnail, checksum::hash_vec_to_string};
 
 
 #[wasm_bindgen]
@@ -16,6 +16,9 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
+    // Get checksum
+    let sha256_hash = hash_vec_to_string(&data);
+    
     // Encode lossless image
     // 一部の画像でサイズが異常に膨れ上がるので保留
     // log("[ColorBoard WASM] Encoding lossless WebP");
@@ -41,6 +44,7 @@ pub fn upload_file(gallery_id: String, data: Vec<u8>) -> u16 {
     let request = ehttp::Request::multipart(
         format!("/api/gallery/{}/upload", gallery_id),
         MultipartBuilder::new()
+            .add_text("sha256", &sha256_hash)
             .add_text("width", &w.to_string())
             .add_text("height", &h.to_string())
             .add_text("blurhash", &blurhash)
