@@ -1,16 +1,16 @@
 <script lang="ts">
     import defaultThumbnail from "$lib/images/default-thumbnail.avif"
-    import { Button } from "$lib/components/ui/button";
-    import { Skeleton } from "$lib/components/ui/skeleton";
-    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google";
-    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure";
-    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte";
+    import { Button } from "$lib/components/ui/button"
+    import { Skeleton } from "$lib/components/ui/skeleton"
+    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
+    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
+    import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
 
-    import { isLoggedIn } from "$lib/account";
-    import { type Gallery, type Image, fetchMyGalleries } from "$lib/api";
+    import { isLoggedIn } from "$lib/account"
+    import { type Gallery, type Image, fetchMyGalleries } from "$lib/api"
 
-    let isLoading = true;
-    let galleries: Gallery[];
+    let isLoading = true
+    let galleries: Gallery[]
 
     function getImageSrc(images?: Image[]) {
         if (!images || images.length === 0) {
@@ -20,15 +20,15 @@
         }
     }
 
-    console.log("Fetching galleries...");
+    console.log("Fetching galleries...")
     fetchMyGalleries()
         .then((res) => {
-            galleries = res;
-            isLoading = false;
+            galleries = res
+            isLoading = false
         })
         .catch((error) => {
-            console.error(error);
-        });
+            console.error(error)
+        })
 </script>
 
 <section>

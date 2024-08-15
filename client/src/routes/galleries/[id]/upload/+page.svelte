@@ -11,25 +11,25 @@
         console.log("initialized")
     })
 
-    export let data: PageData;
-    const galleryId = data.id;
+    export let data: PageData
+    const galleryId = data.id
 
-    let uploadQueue: { name: string, done: boolean }[] = [];
-    let uploadedFiles: { name: string }[] = [];
-    let failedFiles: { name: string, reason?: string }[] = [];
+    let uploadQueue: { name: string, done: boolean }[] = []
+    let uploadedFiles: { name: string }[] = []
+    let failedFiles: { name: string, reason?: string }[] = []
     
     async function waitForDone(item: { done: boolean }) {
         return new Promise<void>((resolve) => {
             const checkDone = () => {
                 if (item.done) {
-                    resolve();
+                    resolve()
                 } else {
                     // 100ミリ秒ごとにチェック
-                    setTimeout(checkDone, 100);
+                    setTimeout(checkDone, 100)
                 }
-            };
-            checkDone();
-        });
+            }
+            checkDone()
+        })
     }
 
     function createUploadReader(fileIndex: number) {
@@ -48,7 +48,7 @@
                 failedFiles = [...failedFiles, {
                     name: filename,
                     reason: `Failed to process image: ${e}`
-                }];
+                }]
 
                 return
             } finally {
@@ -60,17 +60,17 @@
                     failedFiles = [...failedFiles, {
                         name: filename,
                         reason: "Failed to upload image."
-                    }];
+                    }]
                 }else if (uploadRes == 409){
                     failedFiles = [...failedFiles, {
                         name: filename,
                         reason: "The same file already exists."
-                    }];
+                    }]
                 } else {
                     failedFiles = [...failedFiles, {
                         name: filename,
                         reason: `Server response code was not 200 (${uploadRes})`
-                    }];
+                    }]
                 }
             } else {
                 uploadedFiles = [...uploadedFiles, {
@@ -83,20 +83,20 @@
     }
 
     async function handleFilesSelect(e: any) {
-        const { acceptedFiles, fileRejections } = e.detail;
+        const { acceptedFiles, fileRejections } = e.detail
         acceptedFiles.done = false
 
         // Add to queue
-        uploadQueue = [...acceptedFiles];
-        failedFiles = [...failedFiles, ...fileRejections];
+        uploadQueue = [...acceptedFiles]
+        failedFiles = [...failedFiles, ...fileRejections]
 
-        console.log(uploadQueue);
+        console.log(uploadQueue)
         for (let i = 0; i < uploadQueue.length; i++) {
-            const reader = createUploadReader(i);
-            console.log(reader.readAsArrayBuffer(acceptedFiles[i]));
+            const reader = createUploadReader(i)
+            console.log(reader.readAsArrayBuffer(acceptedFiles[i]))
 
-            await waitForDone(uploadQueue[i]);
-            console.log(`Item ${i} is done.`);
+            await waitForDone(uploadQueue[i])
+            console.log(`Item ${i} is done.`)
         }
 
         // リセットする

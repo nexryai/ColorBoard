@@ -117,8 +117,8 @@
         if (!photoswipeIsReady && !isLoading) {
             // 画像要素がレンダリングされた後、PhotoSwipeが初期化されてないなら初期化する
             let lightbox = new PhotoSwipeLightbox({
-                gallery: '#' + galleryId,
-                children: 'a',
+                gallery: "#" + galleryId,
+                children: "a",
                 pswpModule: () => import("photoswipe"),
             })
             lightbox.init()
