@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+    "github.com/nexryai/ColorBoard/db"
 	"github.com/nexryai/ColorBoard/internal/service"
 )
 
@@ -158,7 +159,12 @@ func handleGalleryUploadAPI(ctx *gin.Context, galleryService service.IGallerySer
     )
 
 	if err != nil {
-        ctx.String(http.StatusBadRequest, fmt.Sprintf("Error: %s", err.Error()))
+        if _, e := db.IsErrUniqueConstraint(err); e {
+            ctx.String(http.StatusBadRequest, "A same file already exists")
+            return
+        }
+
+        ctx.String(http.StatusBadRequest, "bad request")
         return
     }
 
