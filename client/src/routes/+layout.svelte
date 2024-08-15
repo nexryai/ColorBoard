@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-    <title>NewsBoard</title>
+    <title>ColorBoard</title>
     <meta name="description" content="Svelte demo app" />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -42,7 +42,7 @@
 </svelte:head>
 
 <div class="app">
-	<Header></Header>
+	<Header />
 
 	<main>
         {#key data.pathname}
