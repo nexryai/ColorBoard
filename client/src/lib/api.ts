@@ -43,9 +43,9 @@ export function fetchMyGalleries(): Promise<Gallery[]> {
     return callApi<Gallery[]>("GET", "/api/gallery/list")
 }
 
-export async function fetchGallery(id: String): Promise<Gallery> {
+export async function fetchGallery(id: String, page: number = 1): Promise<Gallery> {
     try {
-        const response = await callApi("GET", `/api/gallery/${id}`)
+        const response = await callApi("GET", `/api/gallery/${id}?page=${page}`)
         return response as Gallery
     } catch (error) {
         console.error("Failed to fetch gallery data:", error)
