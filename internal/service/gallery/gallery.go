@@ -35,7 +35,7 @@ func (gs *GalleryService) CreateGallery(gallery *service.GalleryCreateParam) (st
 	return created.ID, nil
 }
 
-func (gs *GalleryService) GetGallery(userId string, id string) (*db.GalleryModel, error) {
+func (gs *GalleryService) GetGallery(userId string, id string, page int) (*db.GalleryModel, error) {
 	prisma, ctx, err := database.GetPrismaClient()
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (gs *GalleryService) GetGallery(userId string, id string) (*db.GalleryModel
 			db.Gallery.UserID.Equals(userId),
 		),
 	).With(
-		db.Gallery.Images.Fetch().Take(25),
+		db.Gallery.Images.Fetch().Skip((page*20)-20).Take(20),
 	).Exec(ctx)
 
 	if err != nil {

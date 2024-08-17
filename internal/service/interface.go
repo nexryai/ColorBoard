@@ -27,7 +27,7 @@ type (
 	}
 	IGalleryService interface {
 		CreateGallery(gallery *GalleryCreateParam) (string, error)
-		GetGallery(userId string, id string) (*db.GalleryModel, error)
+		GetGallery(userId string, id string, pgae int) (*db.GalleryModel, error)
 		GetGalleriesByUserId(userId string) (*[]db.GalleryModel, error)
 		AddImage(reader io.Reader, sha256Hash string, thumbReader io.Reader, userId string, galleryId string, blurash string, w int, h int) (string, error)
 	}

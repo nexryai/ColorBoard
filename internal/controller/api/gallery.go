@@ -49,8 +49,13 @@ func handleGalleryCreateAPI(ctx *gin.Context, galleryService service.IGallerySer
 func handleGalleryGetAPI(ctx *gin.Context, galleryService service.IGalleryService) {
     userId := ctx.MustGet("userId").(string)
 	id := ctx.Param("id")
+    pageQuery := ctx.Query("page")
+    page, err := strconv.Atoi(pageQuery)
+    if err != nil || page <= 0 {
+        page = 1
+    }
 
-    gallery, err := galleryService.GetGallery(userId, id)
+    gallery, err := galleryService.GetGallery(userId, id, page)
     if err != nil {
         ctx.JSON(500, gin.H{
             "error": "Failed to get gallery",
