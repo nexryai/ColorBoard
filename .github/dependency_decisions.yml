@@ -71,3 +71,27 @@
     :why:
     :versions: []
     :when: 2024-07-22 13:23:28.733595000 Z
+- - :approve
+  - modernc.org/mathutil
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-08-18 02:06:26.464094218 Z
+- - :approve
+  - cb-client-wasm
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-08-18 02:08:05.923756397 Z
+- - :permit
+  - Apache-2.0 WITH LLVM-exception
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-08-18 02:08:32.555081316 Z
+- - :approve
+  - webpki-roots
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-08-18 02:08:56.942957564 Z
