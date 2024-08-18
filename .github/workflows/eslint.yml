@@ -19,4 +19,4 @@ jobs:
             - name: Install dependencies
               run: cd client && yarn install
             - name: Check with ESLint
-              run: eslint
+              run: yarn run eslint
