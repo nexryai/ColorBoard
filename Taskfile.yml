@@ -18,6 +18,7 @@ tasks:
   
   build:server:
     cmds:
+      - DATABASE_URL=file:./data.db go run github.com/steebchen/prisma-client-go db push
       - CGO_ENABLED=0 go build -buildmode=pie -trimpath -o cb-server main.go
 
   debug:
