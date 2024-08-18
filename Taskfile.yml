@@ -15,6 +15,10 @@ tasks:
     cmds:
       - cd ./client && yarn licenses generate-disclaimer > static/third-party-licenses
       - cd ./client && yarn install && yarn build
+  
+  build:server:
+    cmds:
+      - CGO_ENABLED=0 go build -buildmode=pie -trimpath -o cb-server main.go
 
   debug:
     cmds:
