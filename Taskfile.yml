@@ -14,7 +14,7 @@ tasks:
   build:client:
     cmds:
       - cd ./client && yarn licenses generate-disclaimer > static/third-party-licenses
-      - cd ./client && yarn build
+      - cd ./client && yarn install && yarn build
 
   debug:
     cmds:
