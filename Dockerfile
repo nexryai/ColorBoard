@@ -2,7 +2,7 @@ FROM alpine:edge as builder
 WORKDIR /build
 
 COPY . ./
-RUN apk add --no-cache ca-certificates go go-task go-task-task cargo alpine-sdk g++ build-base cmake clang libressl-dev python3 nodejs-current
+RUN apk add --no-cache ca-certificates go go-task go-task-task cargo alpine-sdk g++ build-base cmake clang libressl-dev python3 nodejs-current yarn
 
 RUN cargo install wasm-pack
 RUN task build:client
