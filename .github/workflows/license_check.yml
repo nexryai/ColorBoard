@@ -32,6 +32,10 @@ jobs:
       - name: Install task
         run:
           npm install -g @go-task/cli
+      
+      - name: Install wasm-pack
+        run:
+          cargo install wasm-pack
 
       - uses: ruby/setup-ruby@v1
         with:
