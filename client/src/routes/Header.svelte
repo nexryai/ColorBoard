@@ -82,8 +82,8 @@
 	<div class="corner">
 		<a href="/">
 			<img src={logo} alt="SvelteKit" />
-            <span class="logo-text">ColorBoard</span>
-            <span class="logo-text logo-beta">beta</span>
+            <span class="logo-text ml-[10px]">ColorBoard</span>
+            <span class="logo-text logo-beta ml-1">beta</span>
 		</a>
 	</div>
 
@@ -132,7 +132,6 @@
 	}
 
     .logo-text {
-        margin-left: 4px;
         color: #353535;
         font-family: "Outfit", sans-serif;
         font-size: 20px;
@@ -170,8 +169,8 @@
     }
 
 	.corner img {
-		width: 2em;
-		height: 2em;
+		width: auto;
+		height: 1.7em;
         margin-left: 15px;
 		object-fit: contain;
 	}
