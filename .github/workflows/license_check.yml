@@ -27,7 +27,7 @@ jobs:
           node-version: 20.x
       
       - name: Install cargo
-        uses: dtolnay/rust-toolchain@master
+        uses: dtolnay/rust-toolchain@stable
       
       - name: Install task
         run:
