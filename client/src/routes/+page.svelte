@@ -18,15 +18,17 @@
         }
     }
 
-    console.log("Fetching galleries...")
-    fetchMyGalleries()
-        .then((res) => {
-            galleries = res
-            isLoading = false
-        })
-        .catch((error) => {
-            console.error(error)
-        })
+    if (isLoggedIn()) {
+        console.log("Fetching galleries...")
+        fetchMyGalleries()
+            .then((res) => {
+                galleries = res
+                isLoading = false
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
 </script>
 
 <section>
@@ -59,7 +61,9 @@
             </div>
 
             {#if !isLoading}
-                <div class="grid place-items-center gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                <div
+                    class="grid place-items-center gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5"
+                >
                     {#each galleries as gallery}
                         <a href="/galleries/{gallery.id}" class="w-[150px]">
                             <div
