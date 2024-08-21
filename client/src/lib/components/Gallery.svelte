@@ -156,7 +156,7 @@
         {/if}
         <div
             id={galleryId}
-            class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 w-[100%] pswp-gallery mb-20"
+            class="grid place-items-center gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 w-[100%] pswp-gallery mb-20"
             class:hidden={!placeholdersAreReady}
             in:blur
         >

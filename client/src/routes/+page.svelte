@@ -80,14 +80,14 @@
             </div>
 
             {#if !isLoading}
-                <div class="grid place-items-center gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+                <div class="grid place-items-center gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                     {#each galleries as gallery}
                         <a href="/galleries/{gallery.id}" class="w-[150px]">
                             <div
-                                class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-xl"
+                                class="cursor-pointer h-[150px] w-[150px] mt-[24px] overflow-hidden shadow-md rounded-2xl transition hover:shadow-lg"
                             >
                                 <img
-                                    class="gallery-box h-[150px] aspect-auto object-cover"
+                                    class="gallery-box h-[150px] w-[150px] aspect-auto object-cover"
                                     src={getImageSrc(gallery.images)}
                                     alt=""
                                 />
