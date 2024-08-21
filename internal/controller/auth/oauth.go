@@ -60,12 +60,6 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), getCallbackURL("azuread"), nil),
 	)
 
-	router.GET("/auth/retry", func(ctx *gin.Context) {
-		// remove session cookie
-		ctx.SetCookie("app_session", "DUMMY", -1, "/api", ctx.Request.Host, true, true)
-		ctx.Redirect(http.StatusFound, "/")
-	})
-
 	router.GET("/auth/:provider", func(ctx *gin.Context) {
 		provider := ctx.Param("provider")
 		ctx.Request = contextWithProviderName(ctx, provider)
@@ -133,14 +127,9 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 
 		session, err := sessionStore.Get(ctx.Request, "app_session")
 		if err != nil {
-			if errors.Is(err, securecookie.ErrMacInvalid) {
-				ctx.Status(http.StatusUnauthorized)
-				return
-			}
-
-			// セッションの暗号化キーが変わるとここでエラーになるのでretryに飛ばして再試行させる
-			// ほんとは/auth/:providerでクリアさせたいけど後ろのハンドラーが邪魔して消えないことがある
-			ctx.Redirect(http.StatusFound, "/auth/retry")
+			log.ErrorWithDetail("Invalid session", err)
+			ctx.SetCookie("app_session", "DUMMY", -1, "/api", ctx.Request.Host, true, true)
+			ctx.Redirect(http.StatusFound, "/")
 			return
 		} else if session == nil {
 			log.Error("Session is nil")
