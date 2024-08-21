@@ -60,11 +60,14 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 		azuread.New(os.Getenv("ENTRA_ID_KEY"), os.Getenv("ENTRA_ID_SECRET"), getCallbackURL("azuread"), nil),
 	)
 
-	router.GET("/auth/:provider", func(ctx *gin.Context) {
-		provider := ctx.Param("provider")
-
+	router.GET("/auth/retry", func(ctx *gin.Context) {
 		// remove session cookie
 		ctx.SetCookie("app_session", "DUMMY", -1, "/api", ctx.Request.Host, true, true)
+		ctx.Redirect(http.StatusFound, "/")
+	})
+
+	router.GET("/auth/:provider", func(ctx *gin.Context) {
+		provider := ctx.Param("provider")
 		ctx.Request = contextWithProviderName(ctx, provider)
 
 		gothic.BeginAuthHandler(ctx.Writer, ctx.Request)
@@ -135,8 +138,9 @@ func ConfigOAuthRouter(router *gin.Engine, userService service.IUserService, ses
 				return
 			}
 
-			log.ErrorWithDetail("failed to get session", err)
-			ctx.Status(http.StatusInternalServerError)
+			// セッションの暗号化キーが変わるとここでエラーになるのでretryに飛ばして再試行させる
+			// ほんとは/auth/:providerでクリアさせたいけど後ろのハンドラーが邪魔して消えないことがある
+			ctx.Redirect(http.StatusFound, "/auth/retry")
 			return
 		} else if session == nil {
 			log.Error("Session is nil")
