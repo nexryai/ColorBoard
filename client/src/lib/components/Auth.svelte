@@ -2,26 +2,26 @@
     import { Button } from "$lib/components/ui/button"
     import { Label } from "$lib/components/ui/label"
     import { Input } from "$lib/components/ui/input"
-    import { getSupabaseClient } from "$lib/supabase";
+    import { getSupabaseClient } from "$lib/supabase"
 
-    let loading = false;
-    let email = "";
-    let password = "";
+    let loading = false
+    let email = ""
+    let password = ""
 
     const handleLogin = async () => {
         try {
-            loading = true;
+            loading = true
             const supabase = await getSupabaseClient()
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) throw error;
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+            if (error) throw error
         } catch (error) {
             if (error instanceof Error) {
-                alert(error.message);
+                alert(error.message)
             }
         } finally {
-            loading = false;
+            loading = false
         }
-    };
+    }
 </script>
 
 <div>
