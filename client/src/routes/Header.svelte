@@ -44,7 +44,7 @@
 	    const response = await fetch("/api/system/storage-status")
 	    if (!response.ok) {
 	        if (response.status === 401) {
-	            refreshSession()
+	            await refreshSession()
 	        }
 
 	        status = StorageStatus.Unknown
