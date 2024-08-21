@@ -9,7 +9,6 @@ export function isLoggedIn(): boolean {
     console.log(document.cookie)
     return document.cookie.includes("auth_uid=google%") || document.cookie.includes("auth_uid=azuread%")
 }
-
 export function refreshSession() {
     if (!browser) {
         console.error("This function is only available in the browser")

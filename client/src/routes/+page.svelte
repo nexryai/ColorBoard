@@ -1,9 +1,7 @@
 <script lang="ts">
     import defaultThumbnail from "$lib/images/default-thumbnail.avif"
-    import { Button } from "$lib/components/ui/button"
     import { Skeleton } from "$lib/components/ui/skeleton"
-    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
-    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
+    import Auth from "$lib/components/Auth.svelte"
     import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
 
     import { isLoggedIn } from "$lib/account"
@@ -47,27 +45,8 @@
                             ></path></svg
                         >
                     </div>
-                    <div class="login-links">
-                        <div class="login-button">
-                            <Button
-                                class="w-[280px]"
-                                on:click={() =>
-                                    (location.href = "/auth/google")}
-                            >
-                                <BrandGoogle />
-                                　Login with Google
-                            </Button>
-                        </div>
-                        <div class="input-elm">
-                            <Button
-                                class="w-[280px]"
-                                on:click={() =>
-                                    (location.href = "/auth/azuread")}
-                            >
-                                <BrandAzure />
-                                　Login with Microsoft Entra ID
-                            </Button>
-                        </div>
+                    <div class="login-form-elms">
+                        <Auth />
                     </div>
                 </div>
             </div>
@@ -107,10 +86,10 @@
 
 <style lang="scss">
     .login-form {
-        width: 720px;
+        max-width: 720px;
         border: solid #e1e1e1 1px;
         border-radius: 10px;
-        margin: 100px auto 50px auto;
+        margin: 50px auto 50px auto;
         overflow: hidden;
 
         /*boxに背景画像を設定*/
@@ -120,7 +99,7 @@
             background-image: url("https://images.unsplash.com/photo-1655635643617-72e0b62b9278?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
             background-size: cover;
             background-position: center;
-            height: 370px;
+            height: 400px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -157,14 +136,9 @@
                     }
                 }
 
-                .login-links {
+                .login-form-elms {
                     width: 370px;
                     margin: auto;
-                    text-align: center;
-
-                    .login-button {
-                        margin: 8px;
-                    }
                 }
             }
         }
