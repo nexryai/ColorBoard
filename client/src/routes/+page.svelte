@@ -1,11 +1,27 @@
 <script lang="ts">
     import defaultThumbnail from "$lib/images/default-thumbnail.avif"
+    import { Button } from "$lib/components/ui/button"
     import { Skeleton } from "$lib/components/ui/skeleton"
-    import Auth from "$lib/components/Auth.svelte"
+    import BrandGoogle from "@tabler/icons-svelte/icons/brand-google"
+    import BrandAzure from "@tabler/icons-svelte/icons/brand-azure"
     import AddGalleryButton from "$lib/components/AddGalleryButton.svelte"
+    import { getApps, initializeApp, type FirebaseApp } from "firebase/app"
+    import {
+        getAuth,
+        getIdToken,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signInWithRedirect,
+        onAuthStateChanged,
+        setPersistence,
+        inMemoryPersistence,
+        type Persistence,
+    } from "firebase/auth"
 
     import { isLoggedIn } from "$lib/account"
     import { type Gallery, type Image, fetchMyGalleries } from "$lib/api"
+    import { getFirebaseConfig } from "$lib/firebase"
+    import { goto } from "$app/navigation"
 
     let isLoading = true
     let galleries: Gallery[]
@@ -29,6 +45,60 @@
                 console.error(error)
             })
     }
+
+    let app: FirebaseApp | undefined
+
+    async function checkToken() {
+        const firebaseConfig = await getFirebaseConfig()
+
+        if (!getApps().length) {
+            app = initializeApp(firebaseConfig)
+        }
+
+        const auth = getAuth(app)
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // ログインしていれば中通る
+                console.log(user) // ユーザー情報が表示される
+                getIdToken(user, false).then(token => {console.log(token)})
+            } else {
+                console.log("not logged in")
+            }
+        })
+
+        /*
+        const user = auth.currentUser;
+        if (!user) {
+            console.log("user is null");
+        } else {
+            const token = await getIdToken(user, false);
+            console.log(token);
+        }*/
+    }
+
+    async function loginWithGoogle() {
+        try {
+            const firebaseConfig = await getFirebaseConfig()
+
+            if (!getApps().length) {
+                app = initializeApp(firebaseConfig)
+            }
+
+            const auth = getAuth(app)
+            const provider = new GoogleAuthProvider()
+            // デフォルトだとリフレッシュトークンがindexedDBに保存される
+            // ブラウザ側で平文でディスクに保存されるのは避けたいのでリフレッシュトークンは使わないようにする（JWTの期限が切れたら再認証）
+            // 連携ログインを使ってるので2回目以降の再認証はユーザーの操作がなくても数回のリダイレクトでできる
+            setPersistence(auth, inMemoryPersistence).then(() => {
+                signInWithPopup(auth, provider)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    checkToken()
 </script>
 
 <section>
@@ -47,8 +117,25 @@
                             ></path></svg
                         >
                     </div>
-                    <div class="login-form-elms">
-                        <Auth />
+                    <div class="login-links">
+                        <div class="login-button">
+                            <Button
+                                class="w-[280px]"
+                                on:click={async () => await loginWithGoogle()}
+                            >
+                                <BrandGoogle />
+                                　Login with Google
+                            </Button>
+                        </div>
+                        <div class="input-elm">
+                            <Button
+                                class="w-[280px]"
+                                on:click={async () => await loginWithGoogle()}
+                            >
+                                <BrandAzure />
+                                　Login with Microsoft Entra ID
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,10 +177,10 @@
 
 <style lang="scss">
     .login-form {
-        max-width: 720px;
+        width: 720px;
         border: solid #e1e1e1 1px;
         border-radius: 10px;
-        margin: 50px auto 50px auto;
+        margin: 100px auto 50px auto;
         overflow: hidden;
 
         /*boxに背景画像を設定*/
@@ -103,7 +190,7 @@
             background-image: url("https://images.unsplash.com/photo-1655635643617-72e0b62b9278?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
             background-size: cover;
             background-position: center;
-            height: 400px;
+            height: 370px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -140,9 +227,14 @@
                     }
                 }
 
-                .login-form-elms {
+                .login-links {
                     width: 370px;
                     margin: auto;
+                    text-align: center;
+
+                    .login-button {
+                        margin: 8px;
+                    }
                 }
             }
         }

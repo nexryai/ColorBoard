@@ -8,6 +8,13 @@
 	import CloudExclamation from "@tabler/icons-svelte/icons/cloud-exclamation"
     import CloudX from "@tabler/icons-svelte/icons/cloud-x"
 
+	import firebase from "firebase/app"
+    import { getFirebaseConfig } from "$lib/firebase"
+
+    onMount(async() => {
+        
+    })
+
 
 	interface StorageStatusAPI {
 		total: number

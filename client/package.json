@@ -34,10 +34,10 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@supabase/supabase-js": "^2.45.1",
 		"@tabler/icons-svelte": "^3.10.0",
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
+		"firebase": "^10.13.0",
 		"lucide-svelte": "^0.428.0",
 		"mode-watcher": "^0.4.0",
 		"nprogress": "^0.2.0",
