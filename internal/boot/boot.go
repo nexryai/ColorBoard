@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	apiController "github.com/nexryai/ColorBoard/internal/controller/api"
 	authController "github.com/nexryai/ColorBoard/internal/controller/auth"
-	firebaseController "github.com/nexryai/ColorBoard/internal/controller/firebase"
 	metaController "github.com/nexryai/ColorBoard/internal/controller/meta"
 	"github.com/nexryai/ColorBoard/internal/logger"
 	"github.com/nexryai/ColorBoard/internal/middleware"
@@ -41,9 +40,6 @@ func Boot() {
 
 	// Config metadata router
 	metaController.ConfigMetaRouter(router)
-
-	// Config firebase proxy router
-	firebaseController.ConfigFirebaseProxyRouter(router)
 
 	// Config the OAuth router
 	authController.ConfigSupabaseAuthRouter(router, userService)

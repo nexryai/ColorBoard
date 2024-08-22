@@ -1,6 +1,6 @@
 module github.com/nexryai/ColorBoard
 
-go 1.23.0
+go 1.22.5
 
 require (
 	github.com/gin-gonic/gin v1.10.0
@@ -34,7 +34,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
-	github.com/nexryai/fireproxy v0.0.0-20240822022100-c84b971301a1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
