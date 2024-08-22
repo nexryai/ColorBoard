@@ -14,8 +14,10 @@
         signInWithRedirect,
         onAuthStateChanged,
         setPersistence,
+        browserSessionPersistence,
         inMemoryPersistence,
         type Persistence,
+        getRedirectResult,
     } from "firebase/auth"
 
     import { isLoggedIn } from "$lib/account"
@@ -49,6 +51,7 @@
     let app: FirebaseApp | undefined
 
     async function checkToken() {
+        console.log("check")
         const firebaseConfig = await getFirebaseConfig()
 
         if (!getApps().length) {
@@ -56,11 +59,16 @@
         }
 
         const auth = getAuth(app)
+        const res = await getRedirectResult(auth)
+        if (!res) {
+            console.log("res is null")
+        } else {
+            console.log(`res: ${res}`)
+        }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // ログインしていれば中通る
-                console.log(user) // ユーザー情報が表示される
+                console.log(user)
                 getIdToken(user, false).then(token => {console.log(token)})
             } else {
                 console.log("not logged in")
@@ -79,20 +87,20 @@
 
     async function loginWithGoogle() {
         try {
-            const firebaseConfig = await getFirebaseConfig()
-
             if (!getApps().length) {
+                const firebaseConfig = await getFirebaseConfig()
                 app = initializeApp(firebaseConfig)
             }
 
             const auth = getAuth(app)
             const provider = new GoogleAuthProvider()
+            signInWithRedirect(auth, provider)
             // デフォルトだとリフレッシュトークンがindexedDBに保存される
             // ブラウザ側で平文でディスクに保存されるのは避けたいのでリフレッシュトークンは使わないようにする（JWTの期限が切れたら再認証）
             // 連携ログインを使ってるので2回目以降の再認証はユーザーの操作がなくても数回のリダイレクトでできる
-            setPersistence(auth, inMemoryPersistence).then(() => {
-                signInWithPopup(auth, provider)
-            })
+            //setPersistence(auth, inMemoryPersistence).then(() => {
+            //    signInWithPopup(auth, provider)
+            //})
         } catch (e) {
             console.log(e)
         }
@@ -130,7 +138,7 @@
                         <div class="input-elm">
                             <Button
                                 class="w-[280px]"
-                                on:click={async () => await loginWithGoogle()}
+                                on:click={async () => await checkToken()}
                             >
                                 <BrandAzure />
                                 　Login with Microsoft Entra ID

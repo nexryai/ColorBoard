@@ -26,3 +26,9 @@ tasks:
       - cd ./client && yarn build
       - go run main.go
     silent: false
+  
+  qdebug:
+    cmds:
+      - cd ./client && yarn vite build
+      - go run main.go
+    silent: false
