@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -39,9 +40,11 @@ type RegisterSessionReq struct {
 var (
 	log         = logger.GetLogger("Auth")
 	googleCerts = getGoogleCerts()
+	firebaseProjectId = os.Getenv("FIREBASE_PROJECT_ID")
 	ErrTokenIsNotValid = errors.New("token is not valid")
 	ErrTokenIsExpired = errors.New("token is expired")
 	ErrUntrustedKey = errors.New("untrusted key")
+	ErrProjectIdIsInvalid = errors.New("firebase project id is invalid")
 )
 
 func getGoogleCerts() *map[string]string {
@@ -179,6 +182,10 @@ func parseFirebaseJWT(tokenString string) (*FirebaseClaims, error) {
 
 		if time.Unix(firebaseClaims.Exp, 0).Before(time.Now()) {
 			return nil, ErrTokenIsExpired
+		} else if firebaseClaims.Aud != firebaseProjectId || firebaseClaims.Aud == "" {
+			return nil, ErrProjectIdIsInvalid
+		} else if firebaseClaims.Iss != "https://securetoken.google.com/" + firebaseProjectId || firebaseClaims.Iss == "" {
+			return nil, ErrProjectIdIsInvalid
 		} else {
 			return firebaseClaims, nil
 		}
@@ -188,6 +195,9 @@ func parseFirebaseJWT(tokenString string) (*FirebaseClaims, error) {
 }
 
 func ConfigFirebaseAuthRouter(router *gin.Engine, userService service.IUserService) {
+	// .envファイルから読み込む場合初期化するときに設定されないため
+	firebaseProjectId = os.Getenv("FIREBASE_PROJECT_ID")
+
 	router.POST("/auth/register-session", func(ctx *gin.Context) {
 		// クライアントがFirebase Authから受け取ったセッショントークンをPOSTしてくるので、正しければCookieに載せて返す
 		var req RegisterSessionReq
