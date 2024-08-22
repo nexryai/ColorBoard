@@ -25,13 +25,15 @@ async function fetchMeta(): Promise<Meta> {
 }
 
 export async function getFirebaseConfig(): Promise<FirebaseOptions> {
+    const meta = await fetchMeta()
+
     return {
-        apiKey: "AIzaSyDbF9fLPkYaNh3A84vw74vi-VIacZN7FXo",
-        authDomain: "colorboard-lab.firebaseapp.com",
-        projectId: "colorboard-lab",
-        storageBucket: "colorboard-lab.appspot.com",
-        messagingSenderId: "367082909949",
-        appId: "1:367082909949:web:c4b3d25649ed717f5f0e94"
+        apiKey: meta.firebaseApiKey,
+        authDomain: meta.firebaseAuthDomain,
+        projectId: meta.firebaseProjectId,
+        storageBucket: meta.firebaseStorageBucket,
+        messagingSenderId: meta.firebaseMEssagingSenderId,
+        appId: meta.firebaseAppId
     }
 }
 
