@@ -59,12 +59,6 @@
         }
 
         const auth = getAuth(app)
-        const res = await getRedirectResult(auth)
-        if (!res) {
-            console.log("res is null")
-        } else {
-            console.log(`res: ${res}`)
-        }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -74,15 +68,6 @@
                 console.log("not logged in")
             }
         })
-
-        /*
-        const user = auth.currentUser;
-        if (!user) {
-            console.log("user is null");
-        } else {
-            const token = await getIdToken(user, false);
-            console.log(token);
-        }*/
     }
 
     async function loginWithGoogle() {
@@ -94,13 +79,12 @@
 
             const auth = getAuth(app)
             const provider = new GoogleAuthProvider()
-            signInWithRedirect(auth, provider)
             // デフォルトだとリフレッシュトークンがindexedDBに保存される
             // ブラウザ側で平文でディスクに保存されるのは避けたいのでリフレッシュトークンは使わないようにする（JWTの期限が切れたら再認証）
             // 連携ログインを使ってるので2回目以降の再認証はユーザーの操作がなくても数回のリダイレクトでできる
-            //setPersistence(auth, inMemoryPersistence).then(() => {
-            //    signInWithPopup(auth, provider)
-            //})
+            setPersistence(auth, inMemoryPersistence).then(() => {
+                signInWithPopup(auth, provider)
+            })
         } catch (e) {
             console.log(e)
         }
