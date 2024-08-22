@@ -42,7 +42,7 @@ func Boot() {
 	metaController.ConfigMetaRouter(router)
 
 	// Config the OAuth router
-	authController.ConfigSupabaseAuthRouter(router, userService)
+	authController.ConfigFirebaseAuthRouter(router, userService)
 
 	// Config API routers
 	apiController.ConfigAccountAPIRouter(router, userService)
