@@ -22,4 +22,7 @@ jobs:
           go-version: "1.23"
 
       - name: Run Tests
-        run: go test ./...
+        run: |
+         mkdir client/build
+         touch client/build/dummyfile
+         go test ./...
