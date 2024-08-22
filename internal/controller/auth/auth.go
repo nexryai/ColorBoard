@@ -39,6 +39,9 @@ type RegisterSessionReq struct {
 var (
 	log         = logger.GetLogger("Auth")
 	googleCerts = getGoogleCerts()
+	ErrTokenIsNotValid = errors.New("token is not valid")
+	ErrTokenIsExpired = errors.New("token is expired")
+	ErrUntrustedKey = errors.New("untrusted key")
 )
 
 func getGoogleCerts() *map[string]string {
@@ -92,8 +95,16 @@ func parseFirebaseJWT(tokenString string) (*FirebaseClaims, error) {
 		return nil, err
 	}
 
-	kid := header["kid"].(string)
-	certString := (*googleCerts)[kid]
+	kid, ok := header["kid"].(string)
+	if (!ok) {
+		return nil, ErrUntrustedKey
+	}
+
+	certString, ok := (*googleCerts)[kid]
+	if (!ok) {
+		return nil, ErrUntrustedKey
+	}
+
 	block, _ := pem.Decode([]byte(certString))
 	if block == nil {
 		return nil, err
@@ -167,12 +178,12 @@ func parseFirebaseJWT(tokenString string) (*FirebaseClaims, error) {
         }
 
 		if time.Unix(firebaseClaims.Exp, 0).Before(time.Now()) {
-			return nil, errors.New("token is expired")
+			return nil, ErrTokenIsExpired
 		} else {
 			return firebaseClaims, nil
 		}
 	} else {
-		return nil, errors.New("token is not valid")
+		return nil, ErrTokenIsNotValid
 	}
 }
 
