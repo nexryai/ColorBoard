@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"embed"
 	"log"
+	_ "modernc.org/sqlite"
 	"os"
 	"strings"
-	_ "modernc.org/sqlite"
 )
 
 // initSQL is an embedded file system that contains the SQL script for initializing the database.

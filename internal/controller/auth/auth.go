@@ -38,12 +38,12 @@ type RegisterSessionReq struct {
 }
 
 var (
-	log         = logger.GetLogger("Auth")
-	googleCerts = getGoogleCerts()
-	firebaseProjectId = os.Getenv("FIREBASE_PROJECT_ID")
-	ErrTokenIsNotValid = errors.New("token is not valid")
-	ErrTokenIsExpired = errors.New("token is expired")
-	ErrUntrustedKey = errors.New("untrusted key")
+	log                   = logger.GetLogger("Auth")
+	googleCerts           = getGoogleCerts()
+	firebaseProjectId     = os.Getenv("FIREBASE_PROJECT_ID")
+	ErrTokenIsNotValid    = errors.New("token is not valid")
+	ErrTokenIsExpired     = errors.New("token is expired")
+	ErrUntrustedKey       = errors.New("untrusted key")
 	ErrProjectIdIsInvalid = errors.New("firebase project id is invalid")
 )
 
@@ -99,12 +99,12 @@ func parseFirebaseJWT(tokenString string) (*FirebaseClaims, error) {
 	}
 
 	kid, ok := header["kid"].(string)
-	if (!ok) {
+	if !ok {
 		return nil, ErrUntrustedKey
 	}
 
 	certString, ok := (*googleCerts)[kid]
-	if (!ok) {
+	if !ok {
 		return nil, ErrUntrustedKey
 	}
 
@@ -135,56 +135,56 @@ func parseFirebaseJWT(tokenString string) (*FirebaseClaims, error) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		firebaseClaims := &FirebaseClaims{}
-        for key, value := range claims {
-            switch key {
-            case "name":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.Name = str
-                }
-            case "picture":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.Picture = str
-                }
-            case "iss":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.Iss = str
-                }
-            case "aud":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.Aud = str
-                }
-            case "auth_time":
-                if f, ok := value.(float64); ok {
-                    firebaseClaims.AuthTime = int64(f)
-                }
-            case "user_id":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.UserId = str
-                }
-            case "sub":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.Sub = str
-                }
-            case "iat":
-                if f, ok := value.(float64); ok {
-                    firebaseClaims.Iat = int64(f)
-                }
-            case "exp":
-                if f, ok := value.(float64); ok {
-                    firebaseClaims.Exp = int64(f)
-                }
-            case "email":
-                if str, ok := value.(string); ok {
-                    firebaseClaims.Email = str
-                }
-            }
-        }
+		for key, value := range claims {
+			switch key {
+			case "name":
+				if str, ok := value.(string); ok {
+					firebaseClaims.Name = str
+				}
+			case "picture":
+				if str, ok := value.(string); ok {
+					firebaseClaims.Picture = str
+				}
+			case "iss":
+				if str, ok := value.(string); ok {
+					firebaseClaims.Iss = str
+				}
+			case "aud":
+				if str, ok := value.(string); ok {
+					firebaseClaims.Aud = str
+				}
+			case "auth_time":
+				if f, ok := value.(float64); ok {
+					firebaseClaims.AuthTime = int64(f)
+				}
+			case "user_id":
+				if str, ok := value.(string); ok {
+					firebaseClaims.UserId = str
+				}
+			case "sub":
+				if str, ok := value.(string); ok {
+					firebaseClaims.Sub = str
+				}
+			case "iat":
+				if f, ok := value.(float64); ok {
+					firebaseClaims.Iat = int64(f)
+				}
+			case "exp":
+				if f, ok := value.(float64); ok {
+					firebaseClaims.Exp = int64(f)
+				}
+			case "email":
+				if str, ok := value.(string); ok {
+					firebaseClaims.Email = str
+				}
+			}
+		}
 
 		if time.Unix(firebaseClaims.Exp, 0).Before(time.Now()) {
 			return nil, ErrTokenIsExpired
 		} else if firebaseClaims.Aud != firebaseProjectId || firebaseClaims.Aud == "" {
 			return nil, ErrProjectIdIsInvalid
-		} else if firebaseClaims.Iss != "https://securetoken.google.com/" + firebaseProjectId || firebaseClaims.Iss == "" {
+		} else if firebaseClaims.Iss != "https://securetoken.google.com/"+firebaseProjectId || firebaseClaims.Iss == "" {
 			return nil, ErrProjectIdIsInvalid
 		} else {
 			return firebaseClaims, nil

@@ -50,7 +50,7 @@ func (gs *GalleryService) GetGallery(userId string, id string, page int) (*db.Ga
 			db.Gallery.UserID.Equals(userId),
 		),
 	).With(
-		db.Gallery.Images.Fetch().OrderBy(db.Image.ID.Order(db.DESC)).Skip((page*20)-20,).Take(20),
+		db.Gallery.Images.Fetch().OrderBy(db.Image.ID.Order(db.DESC)).Skip((page * 20) - 20).Take(20),
 	).Exec(ctx)
 
 	if err != nil {
