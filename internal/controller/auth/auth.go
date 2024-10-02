@@ -213,6 +213,8 @@ func ConfigFirebaseAuthRouter(router *gin.Engine, userService service.IUserServi
 			return
 		}
 
+		ctx.SetCookie("token", req.Token, 3600, "/api", ctx.Request.Host, true, true)
+		ctx.SetCookie("isLoggedIn", "1", 3600, "/", ctx.Request.Host, true, false)
 		ctx.JSON(http.StatusOK, gin.H{"ident": claims.Sub})
 	})
 }

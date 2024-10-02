@@ -11,7 +11,7 @@ export function isLoggedIn(): boolean {
         return false
     }
     console.log(document.cookie)
-    return document.cookie.includes("auth_uid=google%") || document.cookie.includes("auth_uid=azuread%")
+    return document.cookie.includes("isLoggedIn=1")
 }
 
 export async function refreshSession() {
