@@ -2,5 +2,6 @@
     "name": "ColorBoard development container",
     "dockerComposeFile": "compose.yml",
     "service": "web",
-    "remoteUser": "app"
+    "remoteUser": "app",
+    "workspaceFolder": "/workspace"
 }
